@@ -1,4 +1,4 @@
-import popup from '../base/popup.js';
+import popup from '../base/popup.mjs';
 
 function icyfy(obj) {
   return Object.freeze(obj);
