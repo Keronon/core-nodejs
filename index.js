@@ -1,8 +1,13 @@
-import base from './base/base.mjs';
+import base from './base/base.js';
 
 const log = console.log;
 
 $(function () {
+  $('div#overlay' ).addEventListener('click', closePopup);
+  $('button#chess').addEventListener('click', openLink('chess/chess.html'));
+
+  // =====
+
   canvas = base.icyfy(document.getElementById("canvas"));
   ctx    = base.icyfy(canvas.getContext("2d"));
   applyStyles();
@@ -112,9 +117,3 @@ function animate() {
 
   setTimeout(animate, 30);
 }
-
-// так метод из модуля делается глобальным для страницы
-// вместо этого можно убрать onclick из кнопки,
-// и прявязывать метод через .addEventListener('click', methodName)
-window.openLink = base.openLink;
-window.closePopup = base.popup.closePopup;

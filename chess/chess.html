@@ -11,24 +11,26 @@
     <script type="module" src="./chess.js"></script>
 </head>
 <body>
-    <div id="overlay" onclick="closePopup()"> <div id="popup"></div> </div>
+    <div id="overlay"> <div id="popup"></div> </div>
     <div id="body">
         <div id="menu" class="menu-row">
-            <button id="new"  class="btn" onclick="newGame()">NEW GAME</button>
-            <button id="flip" class="btn" onclick="flipBoard()">FLIP BOARD</button>
-            <button id="flip" class="btn" onclick="undoMove()">UNDO MOVE</button>
-            <button id="main" class="btn" onclick="openLink('../index.html')">MAIN MENU</button>
+            <button id="new"  class="btn">NEW GAME  </button>
+            <button id="flip" class="btn">FLIP BOARD</button>
+            <button id="flip" class="btn">UNDO MOVE </button>
+            <button id="main" class="btn">MAIN MENU </button>
         </div>
         <div id="pieces" class="menu-col"></div>
         <div id="board"></div>
         <div id="board-mark-cols" class="menu-row">
-            <p class="mark">a</p><p class="mark">b</p><p class="mark">c</p><p class="mark">d</p><p class="mark">e</p><p class="mark">f</p><p class="mark">g</p><p class="mark">h</p>
+            <p class="mark">a</p><p class="mark">b</p><p class="mark">c</p><p class="mark">d</p>
+            <p class="mark">e</p><p class="mark">f</p><p class="mark">g</p><p class="mark">h</p>
         </div>
         <div id="board-mark-rows" class="menu-col">
-            <p class="mark">8</p><p class="mark">7</p><p class="mark">6</p><p class="mark">5</p><p class="mark">4</p><p class="mark">3</p><p class="mark">2</p><p class="mark">1</p>
+            <p class="mark">8</p><p class="mark">7</p><p class="mark">6</p><p class="mark">5</p>
+            <p class="mark">4</p><p class="mark">3</p><p class="mark">2</p><p class="mark">1</p>
         </div>
         <div id="move-record" class="menu-col"></div>
-        <div id="game-record"><input type="text" id="game-input"/><button id="save-record" class="btn" onclick="setGame()">🖫</button></div>
+        <div id="game-record"><input type="text" id="game-input"/><button id="save-record" class="btn">🖫</button></div>
     </div>
 </body>
 </html>

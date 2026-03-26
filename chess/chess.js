@@ -1,7 +1,16 @@
-import base from '../base/base.mjs';
+import base from '../base/base.js';
 const log = console.log;
 
 $(() => {
+    $('div#overlay'       ).addEventListener('click', base.popup.closePopup);
+    $('button#new'        ).addEventListener('click', newGame);
+    $('button#flip'       ).addEventListener('click', flipBoard);
+    $('button#flip'       ).addEventListener('click', undoMove);
+    $('button#main'       ).addEventListener('click', base.openLink('../index.html'));
+    $('button#save-record').addEventListener('click', setGame);
+
+    // =====
+
     setBoard(520, 520, 8, 8);
     setPieces();
     drawBoard();
@@ -221,11 +230,3 @@ function undoMove() {
     
     $.get('chess.php?undoMove');
 }
-
-window.openLink   = base.openLink;
-window.closePopup = base.popup.closePopup;
-window.flipBoard  = flipBoard;
-window.newGame    = newGame;
-window.setGame    = setGame;
-window.undoMove   = undoMove;
-window.setFigure  = setFigure;
