@@ -11,27 +11,21 @@ function randInt(min, max) {
 }
 
 function openLink(link) {
-  // Добавляем текущий домен, если относительный URL
-  const fullUrl = link.startsWith("http")
-    ? link
-    : window.location.origin + "/" + link.replace(/^\//, "");
-
-  // HEAD-запрос для проверки существования
-  fetch(fullUrl, { method: "HEAD" })
+  fetch(link, { method: "HEAD" })
     .then((response) => {
       if (response.ok) { // 200-299, страница существует
-        window.location.href = fullUrl; // Переход
+        window.location.href = link; // Переход
       } else {
         // 404 или другая ошибка
-        const err = `${fullUrl}<br/>Страница не существует!<br/>Статус: ${response.status}`;
-        log(err);
+        const err = `${link}<br/>Переход не возможен<br/>Статус: ${response.status}`;
+        log(err.replace('<br/>', '\n'));
         popup.showPopup(err);
       }
     })
     .catch((error) => {
-      // Сетевая ошибка или CORS
-      const err = `Ошибка проверки: ${error.message}`;
-      log(err);
+      // Сетевая ошибка, опечатка адреса, CORS
+      const err = `${link}<br/>Ошибка проверки ссылки<br/>Ошибка: ${error.message}`;
+      log(err.replace('<br/>', '\n'));
       popup.showPopup(err);
     });
 }

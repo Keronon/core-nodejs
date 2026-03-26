@@ -3,7 +3,7 @@ const log = console.log;
 
 $(() => {
   $('div#overlay' ).on('click', () => base.popup.closePopup());
-  $('button#chess').on('click', () => base.openLink('chess/chess.html'));
+  $('button#chess').on('click', () => base.openLink('./chess/chess.html'));
 
   // =====
 

@@ -18,7 +18,7 @@ $(() => {
 
   $('#game-input').on('input', function () {
     const pos = this.selectionStart;
-    $(this).val( $(this).val() .replace(/[^pnbrqk_PNBRQK]/g, '').padEnd(boardSize.length, '_').slice(0, boardSize.length) );
+    $(this).val( $(this).val().replace(/[^pnbrqk_PNBRQK]/g, '').padEnd(boardSize.length, '_').slice(0, boardSize.length) );
     this.setSelectionRange(pos, pos);
   });
 });
