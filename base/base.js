@@ -1,4 +1,5 @@
 import popup from './popup.js';
+const log = console.log;
 
 function icyfy(obj) {
   return Object.freeze(obj);
