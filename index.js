@@ -3,8 +3,8 @@ import base from './base/base.js';
 const log = console.log;
 
 $(function () {
-  $('div#overlay' ).addEventListener('click', closePopup);
-  $('button#chess').addEventListener('click', openLink('chess/chess.html'));
+  $('div#overlay' ).addEventListener('click', base.popup.closePopup);
+  $('button#chess').addEventListener('click', base.openLink('chess/chess.html'));
 
   // =====
 
