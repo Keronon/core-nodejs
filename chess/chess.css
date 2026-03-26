@@ -1,0 +1,143 @@
+@import "../base/base.css";
+
+:root {
+    --board-width  : 520px;
+    --board-height : var(--board-width);
+    --board-xSquare: 8;
+    --board-ySquare: var(--board-xSquare);
+    --square-width : calc(var(--board-width) / var(--board-xSquare));
+}
+
+#board {
+    margin-top   : 12vh;
+    width        : var(--board-width);
+    height       : var(--board-height);
+    border       : 10px solid brown;
+    border-radius: 10px 0 0 0;
+    
+    anchor-name: --board;
+}
+
+#menu {
+    position    : absolute;
+    top         : anchor(--board bottom);
+    left        : anchor(--board left);
+    width       : calc(var(--board-width) + 20px);
+    margin-top  : 2em;
+    justify-content: space-evenly;
+}
+
+#pieces {
+    position : absolute;
+    top      : anchor(--board top );
+    right    : anchor(--board left);
+    
+    width          : auto;
+    height         : calc(var(--board-height) + 30px + 1.15em);
+    margin-right   : 1.5em;
+    border         : 10px solid brown;
+    border-radius  : 10px;
+    box-sizing     : border-box;
+    justify-content: start;
+    flex-wrap: wrap;
+    
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+#board-mark-cols {
+    position: absolute;
+    top     : anchor(--board bottom);
+    left    : anchor(--board left);
+    width   : var(--board-width);
+    padding : 0 10px 10px 10px;
+    justify-content: space-around;
+    
+    background-color: brown;
+    color: white;
+    border-radius: 0 0 10px 10px;
+}
+
+#board-mark-rows {
+    position: absolute;
+    top     : anchor(--board top);
+    left    : anchor(--board right);
+    width   : 1.15em;
+    height  : var(--board-height);
+    padding : 10px 10px 10px 0;
+    justify-content: space-around;
+    
+    background-color: brown;
+    color           : white;
+    border-radius: 0 10px 10px 0;
+}
+
+#move-record {
+    position       : absolute;
+    top            : anchor(--board top);
+    left           : anchor(--board right);
+    height         : calc(var(--board-height) + 30px + 1.15em);
+    width          : 12em;
+    margin-left    : 3em;
+    padding        : 0.5em;
+    border         : 10px solid brown;
+    border-radius  : 10px;
+    box-sizing     : border-box;
+    justify-content: start;
+    overflow-y     : scroll;
+    
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+#game-record {
+    position      : absolute;
+    bottom        : anchor(--board top);
+    left          : anchor(--board left);
+    width         : calc(var(--board-width) + 30px + 1.15em);
+    margin-bottom : 10px;
+    border        : 10px solid brown;
+    border-radius : 10px;
+    box-sizing    : border-box;
+    display       : flex ;
+    
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+#save-record {
+    width: fit-content;
+}
+
+#game-input {
+    font: 10.5pt monospace;
+    width: 1em;
+    flex-grow: 1;
+    background-color: #0000;
+    border: none;
+}
+
+.mark, .move, .piece {
+    margin: 0;
+}
+
+.piece {
+    font-size: 24pt;
+}
+
+.square {
+    width : var(--square-width);
+    height: var(--square-width);
+    float          : left;
+    display        : flex;
+    align-items    : center;
+    justify-content: center;
+}
+.black {
+    background-color: #999;
+}
+.white {
+    background-color: #ddd;
+}
+
+.figure {
+    font-size: 48px;
+    cursor: pointer;
+}

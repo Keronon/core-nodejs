@@ -1,0 +1,30 @@
+@import "./base/base.css";
+
+body {
+  overflow: hidden;
+}
+
+@keyframes colorChange {
+  0% {
+    background-color: #330000cc;
+  }
+  30% {
+    background-color: #003300cc;
+  }
+  60% {
+    background-color: #000033cc;
+  }
+  100% {
+    background-color: #330000cc;
+  }
+}
+#canvas {
+  animation: colorChange 2s infinite;
+}
+
+.menu-col {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
