@@ -1,8 +1,11 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node'
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+const log = console.log;
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
-  const { name = 'World' } = req.query
+  log(req, '\n', res);
+  
+  const { name = "World" } = req.query;
   return res.json({
-    message: `Hello ${name}!`,
-  })
+    message: `Hello, ${name}!`,
+  });
 }
