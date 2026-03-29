@@ -1,0 +1,53 @@
+html {
+    --col1: 180;
+
+    font: 20pt monospace;
+}
+
+body {
+    margin: 1em 5em;
+    text-align: center;
+    color: hsl(var(--col1), 100%, 30%);
+    text-shadow: /*x*/0em /*y*/0em /*blure*/2px hsl(0, 0%, 0%);
+    background-color: hsla(var(--col1), 50%, 50%, 0.5);
+}
+
+a {
+    font-family: ui-monospace;
+    text-decoration: none;
+    color: inherit;
+}
+a:hover > * {
+    color: hsl(var(--col1), 100%, 20%);
+}
+a:active > * {
+    background-color: hsl(0, 0%, 100%);
+    font-weight: bold;
+    color: hsl(var(--col1), 100%, 40%);
+}
+
+div#body {
+    background-color: hsla(0, 0%, 100%, 0.5);
+    box-sizing: border-box;
+    border-radius: 1em;
+    height: 100vh;
+    padding: 1em;
+}
+div#body > * {
+    margin-bottom: 1em;
+}
+div#body > :last-child {
+    margin-bottom: 0;
+}
+
+h1#title {
+    font-size: 60pt;
+    margin: 0;
+}
+
+div.block {
+    background-color: hsl(0, 0%, 95%); /* ghostwhite oldlace papayawhip seashell snow whitesmoke */
+    box-shadow: /*x*/0em /*y*/0em /*blure*/1em /*edge*/0em lightgray;
+    border-radius: 0.5em;
+    padding: 1em;
+}
