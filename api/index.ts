@@ -7,7 +7,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     //const file = path.join(process.cwd(), "api", "api.html");
     //const html = await fs.promises.readFile(file, "utf8");
 
-    return res.status(200).send(printDirStructure('../')); // process.cwd()
+    return res.status(200).send(printDirStructure('./')); // process.cwd()
     // return res.json({ message: `msg` });
 }
 
