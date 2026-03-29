@@ -4,15 +4,14 @@ import path from "path";
 const log = console.log;
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-    //const file = path.join(process.cwd(), "api.html");
+    //const file = path.join(process.cwd(), "api", "api.html");
     //const html = await fs.promises.readFile(file, "utf8");
 
     return res.status(200).send(printDirStructure(process.cwd()));
     // return res.json({ message: `msg` });
 }
 
-function printDirStructure(dir: string, prefix = ''): string {
-    let struct = '';
+function printDirStructure(dir: string, prefix = '', struct = ''): string {
     const files = fs.readdirSync(dir);
     
     files.forEach((file: string, index: number) => {
@@ -20,11 +19,11 @@ function printDirStructure(dir: string, prefix = ''): string {
         const isLast = index === files.length - 1;
         const connector = isLast ? '└── ' : '├── ';
         
-        struct += prefix + connector + file;
+        struct += prefix + connector + file + '<br/>';
         
         if (fs.statSync(filePath).isDirectory()) {
             const newPrefix = prefix + (isLast ? '    ' : '│   ');
-            printDirStructure(filePath, newPrefix);
+            struct += printDirStructure(filePath, newPrefix, struct);
         }
     });
 
