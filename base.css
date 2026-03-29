@@ -1,0 +1,65 @@
+html {
+    --col1: 180;
+
+    font: 20pt monospace;
+}
+
+body {
+    margin: 1em 5em;
+    text-align: center;
+    color: hsl(var(--col1), 100%, 30%);
+    text-shadow: /*x*/0em /*y*/0em /*blure*/2px hsl(0, 0%, 0%);
+    background-color: hsla(var(--col1), 50%, 50%, 0.5);
+    user-select: none;
+}
+
+p {
+    margin: 0;
+}
+
+a {
+    font-family: ui-monospace;
+    text-decoration: none;
+    color: inherit;
+}
+a.block {
+    display: block;
+}
+
+.active:hover {
+    background-color: hsl(0, 0%, 100%) !important;
+    color: hsl(var(--col1), 100%, 20%);
+    cursor: pointer;
+}
+.active:active {
+    background-color: hsl(0, 0%, 100%) !important;
+    color: hsl(var(--col1), 100%, 40%);
+    font-weight: bold;
+}
+
+div#body {
+    background-color: hsla(0, 0%, 100%, 0.5);
+    box-sizing: border-box;
+    border-radius: 1em;
+    padding: 1em;
+}
+div#body > :last-child {
+    margin-bottom: 0;
+}
+
+h1#title {
+    font-size: 60pt;
+    margin: 0;
+}
+
+.block {
+    background-color: hsl(0, 0%, 95%); /* ghostwhite oldlace papayawhip seashell snow whitesmoke */
+    box-shadow: /*x*/0em /*y*/0em /*blure*/1em /*edge*/0em lightgray;
+    border-radius: 0.5em;
+    margin-bottom: 1em;
+    padding: 1em;
+}
+
+.copy {
+    user-select: text;
+}
