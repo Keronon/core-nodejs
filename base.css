@@ -18,25 +18,22 @@ a {
     color: inherit;
 }
 a:hover > * {
+    background-color: hsl(0, 0%, 100%) !important;
     color: hsl(var(--col1), 100%, 20%);
 }
 a:active > * {
-    background-color: hsl(0, 0%, 100%);
-    font-weight: bold;
+    background-color: hsl(0, 0%, 100%) !important;
     color: hsl(var(--col1), 100%, 40%);
+    font-weight: bold;
 }
 
 div#body {
     background-color: hsla(0, 0%, 100%, 0.5);
     box-sizing: border-box;
     border-radius: 1em;
-    height: 100vh;
     padding: 1em;
 }
-div#body > * {
-    margin-bottom: 1em;
-}
-div#body > :last-child {
+div#body :last-child {
     margin-bottom: 0;
 }
 
@@ -49,5 +46,6 @@ div.block {
     background-color: hsl(0, 0%, 95%); /* ghostwhite oldlace papayawhip seashell snow whitesmoke */
     box-shadow: /*x*/0em /*y*/0em /*blure*/1em /*edge*/0em lightgray;
     border-radius: 0.5em;
+    margin-bottom: 1em;
     padding: 1em;
 }
