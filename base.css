@@ -59,3 +59,7 @@ h1#title {
     margin-bottom: 1em;
     padding: 1em;
 }
+
+.copy {
+    user-select: text;
+}
