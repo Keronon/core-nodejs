@@ -1,5 +1,5 @@
-import fs   from "fs";
-import path from "path";
+import * as fs  from "fs";
+import { join } from "path";
 
 /**
 creates string-object that contains dir-files structure from "dir"-position recursively
@@ -11,7 +11,7 @@ export function getDirStructure(dir: string, prefix: string = '', struct: string
     const files = fs.readdirSync(dir);
     
     files.forEach((file: string, index: number) => {
-        const filePath = path.join(dir, file);
+        const filePath = join(dir, file);
         const isLast = index === files.length - 1;
         const connector = isLast ? '└── ' : '├── ';
         
