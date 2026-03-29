@@ -13,10 +13,17 @@ body {
     user-select: none;
 }
 
+p {
+    margin: 0;
+}
+
 a {
     font-family: ui-monospace;
     text-decoration: none;
     color: inherit;
+}
+a.block {
+    display: block;
 }
 
 .active:hover {
@@ -28,10 +35,6 @@ a {
     background-color: hsl(0, 0%, 100%) !important;
     color: hsl(var(--col1), 100%, 40%);
     font-weight: bold;
-}
-
-p {
-    margin: 0;
 }
 
 div#body {
@@ -49,7 +52,7 @@ h1#title {
     margin: 0;
 }
 
-div.block {
+.block {
     background-color: hsl(0, 0%, 95%); /* ghostwhite oldlace papayawhip seashell snow whitesmoke */
     box-shadow: /*x*/0em /*y*/0em /*blure*/1em /*edge*/0em lightgray;
     border-radius: 0.5em;
