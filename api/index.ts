@@ -1,31 +1,17 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
-import fs   from "fs";
-import path from "path";
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+
+import fs_promises from 'fs/promises';
+
 const log = console.log;
 
+/**
+core handler
+
+@returns index-HTML-page (api.html)
+*/
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-    const file = path.join(process.cwd(), "api", "api.html");
-    const html = await fs.promises.readFile(file, "utf8");
-
-    return res.status(200).send(html); // printDirStructure('./') : './' = process.cwd()
-    // return res.json({ message: `msg` });
-}
-
-function printDirStructure(dir: string, prefix = '', struct = ''): string {
-    const files = fs.readdirSync(dir);
-    
-    files.forEach((file: string, index: number) => {
-        const filePath = path.join(dir, file);
-        const isLast = index === files.length - 1;
-        const connector = isLast ? '└── ' : '├── ';
-        
-        struct += prefix + connector + file + '<br/>';
-        
-        if (fs.statSync(filePath).isDirectory()) {
-            const newPrefix = prefix + (isLast ? '    ' : '│   ');
-            struct = printDirStructure(filePath, newPrefix, struct);
-        }
-    });
-
-    return struct;
+    //const path = require('path');
+    //const file = path.join(process.cwd(), 'api', 'api.html');
+    const html = await fs_promises.readFile('./api.html', 'utf8');
+    return res.status(200).send(html);
 }
