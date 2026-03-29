@@ -12,6 +12,6 @@ core handler
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     //const path = require('path');
     //const file = path.join(process.cwd(), 'api', 'api.html');
-    const html = await fs_promises.readFile('./api.html', 'utf8');
+    const html = await fs_promises.readFile('api.html', 'utf8');
     return res.status(200).send(html);
 }
