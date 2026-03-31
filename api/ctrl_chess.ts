@@ -6,7 +6,7 @@ import { Board }    from './chess/board';
 const log = console.log;
 
 //const stor = new Stors.StorSession('stor_sess');
-const stor = new Stors.StorFile('chess/stor_file.json');
+const stor = new Stors.StorFile('./chess/stor_file.json');
 //const stor = new Stors.StorDB('mysql:host=localhost;dbname=Chess;charset=utf8', 'root', '');
 
 const board = new Board(stor);
@@ -17,6 +17,11 @@ const board = new Board(stor);
  * @returns json-object of response
  */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+    return res.json({
+        req_query: req.query,
+        obj_keys : Object.keys(req.query)
+    });
+
     switch (Object.keys(req.query)[0]) {
         case 'getFigures': return res.json(board.getFigures(                                                            )); break;
         case 'setFigures': return res.json(board.setFigures( req.query['set' ] as string                                )); break;
