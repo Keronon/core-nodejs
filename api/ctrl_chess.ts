@@ -15,17 +15,13 @@ const board = new Board(stor);
  * @returns json-object of response
  */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-    return res.json({
-        req_query: req.query,
-        obj_keys : Object.keys(req.query)
-    });
-
     switch (Object.keys(req.query)[0]) {
-        case 'getFigures': return res.json(board.getFigures(                                                            )); break;
-        case 'setFigures': return res.json(board.setFigures( req.query['set' ] as string                                )); break;
-        case 'setFigure' : return res.json(board.setFigure (+req.query['to'  ]          ,  req.query['figure'] as string)); break;
-        case 'moveFigure': return res.json(board.moveFigure(+req.query['from']          , +req.query['to']              )); break;
-        case 'undoMove'  : return res.json(board.undoMove  (                                                            )); break;
+        case 'check'     : return res.json({ req_query: req.query }                                                      );
+        case 'getFigures': return res.json(board.getFigures(                                                            ));
+        case 'setFigures': return res.json(board.setFigures( req.query['set' ] as string                                ));
+        case 'setFigure' : return res.json(board.setFigure (+req.query['to'  ]          ,  req.query['figure'] as string));
+        case 'moveFigure': return res.json(board.moveFigure(+req.query['from']          , +req.query['to']              ));
+        case 'undoMove'  : return res.json(board.undoMove  (                                                            ));
         default: return res.json({code: '0-1', msg: 'unknown request'} satisfies ReqError);
     }
 }
