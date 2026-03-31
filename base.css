@@ -28,8 +28,6 @@ h6 {
 a {
     color: hsl(calc(var(--col1) - 50), 100%, 30%);
     text-decoration: none;
-    font-weight: bold;
-    font-style: italic;
 }
 a.block {
     display: block;
