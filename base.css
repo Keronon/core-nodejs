@@ -15,26 +15,36 @@ body {
 
 p {
     margin: 0;
+    text-align: justify;
+    white-space: pre-line;
+}
+
+h6 {
+    margin: 0;
+    font-size: unset;
+    font-weight: unset;
 }
 
 a {
-    font-family: ui-monospace;
+    color: hsl(calc(var(--col1) - 50), 100%, 30%);
     text-decoration: none;
-    color: inherit;
 }
 a.block {
     display: block;
 }
 
 .active:hover {
-    background-color: hsl(0, 0%, 100%) !important;
     color: hsl(var(--col1), 100%, 20%);
     cursor: pointer;
 }
 .active:active {
-    background-color: hsl(0, 0%, 100%) !important;
     color: hsl(var(--col1), 100%, 40%);
     font-weight: bold;
+}
+
+.block.active:hover, .block.active:active,
+.b_.active:hover,    .b_.active:active {
+    background-color: hsl(0, 0%, 100%) !important;
 }
 
 div#body {
