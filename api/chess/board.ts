@@ -51,7 +51,8 @@ export class Board {
     }
 
     setFigure(to: number, figure: string): void {
-        const game : Game   = this.stor.load() as Game;
+        const game : Game = this.stor.load() as Game;
+        if (!game) { console.log('game is empty'); return; }
         const toFig: string = game.set.at(to);
         
         game.moves.push(new Move(to, figure, to, toFig));
@@ -61,7 +62,8 @@ export class Board {
     }
 
     moveFigure(from: number, to: number): void {
-        const game : Game   = this.stor.load() as Game;
+        const game : Game = this.stor.load() as Game;
+        if (!game) { console.log('game is empty'); return; }
         const frFig: string = game.set.at(from);
         const toFig: string = game.set.at(to);
         
@@ -75,8 +77,8 @@ export class Board {
 
     undoMove(): void {
         const game: Game = this.stor.load() as Game;
+        if (!game) { console.log('game is empty'); return; }
         const move: Move = game.moves.pop();
-        
         if (!move) return;
         
         game.set = setCharAt(game.set, +move.fromPos, move.fromFig);
