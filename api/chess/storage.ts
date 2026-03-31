@@ -33,8 +33,8 @@ export class StorFile implements IStorage {
             const dir = Path.dirname(this.file);
             console.log('dir is : ' + dir);
             FS.mkdir(dir, { recursive: true })
-            .then ((   ) => { FS.writeFile(this.file, '', 'utf-8');    })
-            .catch((err) => { console.log( 'ERROR on MkDir: ' + err ); });
+            .then ((   ) => { return FS.writeFile(this.file, '', 'utf-8'); })
+            .catch((err) => { console.log( 'ERROR on MkDir: ' + err );     });
         });
     }
 
