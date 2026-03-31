@@ -2,8 +2,6 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 import { readFile } from 'fs/promises';
 
-const log = console.log;
-
 /**
  * core handler
  * 

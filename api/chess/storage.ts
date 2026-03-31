@@ -29,15 +29,17 @@ export class StorFile implements IStorage {
     constructor(file_path: string) {
         this.file = file_path;
 
-        FS.access(this.file).catch(async () => {
+        FS.access(this.file).catch(() => {
             const dir = Path.dirname(this.file);
-            await FS.mkdir(dir, { recursive: true });
-            await FS.writeFile(this.file, '', 'utf-8');
+            console.log('dir is : ' + dir);
+            FS.mkdir(dir, { recursive: true })
+            .then ((   ) => { FS.writeFile(this.file, '', 'utf-8');    })
+            .catch((err) => { console.log( 'ERROR on MkDir: ' + err ); });
         });
     }
 
-    async save(obj: object): Promise<void> {
-        await FS.writeFile(this.file, JSON.stringify(obj, null, 2), 'utf-8');
+    save(obj: object): void {
+        FS.writeFile(this.file, JSON.stringify(obj, null, 2), 'utf-8');
     }
 
     /**
@@ -45,7 +47,10 @@ export class StorFile implements IStorage {
      */
     load(): object {
         let obj: Object;
-        FS.readFile(this.file, 'utf-8').then((str) => { obj = JSON.parse(str); }).catch((err) => { obj = err; });
+        (async () => {
+            const file = await FS.readFile(this.file, 'utf-8');
+            obj = JSON.parse(file);
+        })();
         return obj;
     }
 }
