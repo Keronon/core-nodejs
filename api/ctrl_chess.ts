@@ -4,7 +4,7 @@ import * as Stors   from './chess/storage';
 import { Board }    from './chess/board';
 
 //const stor = new Stors.StorSession('stor_sess');
-const stor = new Stors.StorFile('./chess/stor_file.json');
+const stor = new Stors.StorFile('chess/stor_file.json');
 //const stor = new Stors.StorDB('mysql:host=localhost;dbname=Chess;charset=utf8', 'root', '');
 
 const board = new Board(stor);
