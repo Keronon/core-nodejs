@@ -15,6 +15,13 @@ body {
 
 p {
     margin: 0;
+    text-align: justify;
+}
+
+h6 {
+    margin: 0;
+    font-size: unset;
+    font-weight: unset;
 }
 
 a {
