@@ -1,12 +1,21 @@
-import * as fs  from "fs";
-import { join } from "path";
+import * as fs  from 'fs';
+import { join } from 'path';
+
+import handler from './index';
+export default handler;
+
+export type ReqError = {
+    code: string;
+    msg : string;
+} 
 
 /**
-creates string-object that contains dir-files structure from "dir"-position recursively
-crashes if dir unexists
-
-@param dir for root : './' = process.cwd()
-*/
+ * creates string-object that contains dir-files structure from "dir"-position recursively
+ * 
+ * crashes if dir unexists
+ * 
+ * @param dir - start path-point to create dir-file structure (for root : './' or process.cwd())
+ */
 export function getDirStructure(dir: string, prefix: string = '', struct: string = ''): string {
     const files = fs.readdirSync(dir);
     
@@ -24,4 +33,11 @@ export function getDirStructure(dir: string, prefix: string = '', struct: string
     });
 
     return struct;
+}
+
+export function setCharAt(str: string, index: number, char: string): string {
+    if (index < 0 || index >= str.length) {
+        throw new Error("Индекс вне диапазона");
+    }
+    return str.slice(0, index) + char + str.slice(index + 1);
 }

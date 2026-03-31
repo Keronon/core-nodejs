@@ -5,10 +5,10 @@ import { readFile } from 'fs/promises';
 const log = console.log;
 
 /**
-core handler
-
-@returns index-HTML-page (api.html)
-*/
+ * core handler
+ * 
+ * @returns filler index-HTML page (api.html)
+ */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     const path = require('path');
     const file = path.join(process.cwd(), 'api', 'api.html');
