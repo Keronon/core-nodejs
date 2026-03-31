@@ -21,6 +21,7 @@
             <h6 class="copy">https://keronon-schemata.vercel.app/api/chess?check</h6>
             <p>
                 Проверить работу сервиса
+
                 > Возвращает параметры запроса, разобранные в json-объект
             </p>
             <br/>
@@ -28,6 +29,7 @@
             <h6 class="copy">https://keronon-schemata.vercel.app/api/chess?getFigures</h6>
             <p>
                 Получить набор фигур и список дейтсвий
+
                 > Возвращает json-объект, содержащий:
                 - поле набора фигур (представленного строкой из буквенных обозначений фигур)
                 - поле списка действий (представленного объектами <a class="active" href="./doc11.html">Move</a>)
@@ -37,6 +39,7 @@
             <h6 class="copy">https://keronon-schemata.vercel.app/api/chess?setFigures&set=S</h6>
             <p>
                 Разместить набор фигур S (представленный строкой из буквенных обозначений фигур) на доске
+
                 > Возвращает json-объект undefined
             </p>
             <br/>
@@ -44,6 +47,7 @@
             <h6 class="copy">https://keronon-schemata.vercel.app/api/chess?setFigure&to=X&figure=F</h6>
             <p>
                 Устанавить фигуру F (представленную буквенным обозначением) на позицию X
+
                 > Возвращает json-объект undefined
             </p>
             <br/>
@@ -51,6 +55,7 @@
             <h6 class="copy">https://keronon-schemata.vercel.app/api/chess?moveFigure&from=X&to=Y</h6>
             <p>
                 Переместить фигуру с позиции X на позицию Y
+
                 > Возвращает json-объект undefined
             </p>
             <br/>
@@ -58,6 +63,7 @@
             <h6 class="copy">https://keronon-schemata.vercel.app/api/chess?undoMove</h6>
             <p>
                 Отменить последнее записанное действие на доске
+
                 > Возвращает json-объект undefined
             </p>
             <br/>
@@ -65,7 +71,10 @@
             <h6 class="copy">https://keronon-schemata.vercel.app/api/chess?unknown_function</h6>
             <p>
                 Неизвестная функция
-                > Возвращает json-объект ошибки с кодом '0-1' и сообщением 'unknown request'
+
+                > Возвращает <a class="active" href="./doc12.html">json-объект ошибки</a>, содержащий:
+                - код '0-1'
+                - сообщение 'unknown request'
             </p>
         </div>
     </div>
