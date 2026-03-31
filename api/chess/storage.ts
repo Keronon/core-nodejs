@@ -26,8 +26,8 @@ export class StorSession implements IStorage {
 export class StorFile implements IStorage {
     private file: string;
 
-    constructor(file_path: string) {
-        this.file = Path.join(process.cwd(), 'api', file_path);
+    constructor(path: string, file: string) {
+        this.file = Path.join(process.cwd(), 'api', path, 'tmp', file);
 
         FS.access(this.file).catch(() => {
             const dir = Path.dirname(this.file);
