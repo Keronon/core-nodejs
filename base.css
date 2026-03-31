@@ -16,6 +16,7 @@ body {
 p {
     margin: 0;
     text-align: justify;
+    white-space: pre-line;
 }
 
 h6 {
@@ -25,9 +26,10 @@ h6 {
 }
 
 a {
-    font-family: ui-monospace;
+    color: hsl(calc(var(--col1) - 50), 100%, 30%);
     text-decoration: none;
-    color: inherit;
+    font-weight: bold;
+    font-style: italic;
 }
 a.block {
     display: block;
