@@ -27,14 +27,17 @@ a.block {
 }
 
 .active:hover {
-    background-color: hsl(0, 0%, 100%) !important;
     color: hsl(var(--col1), 100%, 20%);
     cursor: pointer;
 }
 .active:active {
-    background-color: hsl(0, 0%, 100%) !important;
     color: hsl(var(--col1), 100%, 40%);
     font-weight: bold;
+}
+
+.block.active:hover, .block.active:active,
+.b_.active:hover,    .b_.active:active {
+    background-color: hsl(0, 0%, 100%) !important;
 }
 
 div#body {
