@@ -5,7 +5,7 @@ $(() => {
   $('div#overlay'       ).on('click', () => base.popup.closePopup()       );
   $('button#new'        ).on('click', () => newGame()                     );
   $('button#flip'       ).on('click', () => flipBoard()                   );
-  $('button#flip'       ).on('click', () => undoMove()                    );
+  $('button#undo'       ).on('click', () => undoMove()                    );
   $('button#main'       ).on('click', () => base.openLink('../index.html'));
   $('button#save-record').on('click', () => setGame()                     );
 
