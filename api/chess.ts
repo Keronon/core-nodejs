@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { ReqError } from './core';
+import { ReqError, corsHeaderOptions, corsHeaderBase } from './core';
 import * as Stors   from './chess/storage';
 import { Board }    from './chess/board';
 
@@ -15,6 +15,11 @@ const board = new Board(stor);
  * @returns json-object of response
  */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+    if (req.method === 'OPTIONS') {
+        return res.setHeaders(corsHeaderOptions).status(200).end()
+    }
+
+    res.setHeaders(corsHeaderBase);
     switch (Object.keys(req.query)[0]) {
         case 'check'     : return res.json({ req_query: req.query }                                                      );
         case 'getFigures': return res.json(board.getFigures(                                                            ));

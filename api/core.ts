@@ -4,6 +4,15 @@ import { join } from 'path';
 import handler from './index';
 export default handler;
 
+export const corsHeaderOptions = new Headers({
+    'Access-Control-Allow-Origin' : 'https://keronon.github.io',
+    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+});
+export const corsHeaderBase = new Headers({
+    'Access-Control-Allow-Origin' : 'https://keronon.github.io'
+});
+
 export type ReqError = {
     code: string;
     msg : string;
