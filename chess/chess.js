@@ -149,23 +149,21 @@ function drawBoard() {
 function setFigures(data) {
   if (isAction) return;
   if (!data)    return;
-
-  let game = JSON.parse(data);
-  if (curSet == game.set) return;
+  if (curSet == data.set) return;
 
   log(`func : ${setFigures.name}`);
 
-  $('#game-input').val(game.set);
-  curSet = game.set;
+  $('#game-input').val(data.set);
+  curSet = data.set;
 
   for (let coord = 0; coord < boardSize.length; coord++) {
-    placeFigure(coord, game.set.charAt(coord));
+    placeFigure(coord, data.set.charAt(coord));
   }
 
   $('#move-record').empty();
-  if (!game.moves[0]) return;
-  for (let moveNum in game.moves) {
-    const move = game.moves[moveNum];
+  if (!data.moves[0]) return;
+  for (let moveNum in data.moves) {
+    const move = data.moves[moveNum];
     recordMove(
       `${+moveNum + 1} : ${
         move.fromFig == '_' ? '&#12276;' : pieceSet[move.fromFig]
