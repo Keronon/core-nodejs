@@ -8,7 +8,7 @@ export interface IStorage {
 
 export class StorSession implements IStorage {
     private stor_name: string;
-    private static sessions: object[];
+    private static sessions: object[] = [];
 
     constructor(stor_name: string) {
         this.stor_name = stor_name;
