@@ -23,6 +23,9 @@ export class StorSession implements IStorage {
     }
 }
 
+/**
+ * useless with serverless function
+ */
 export class StorFile implements IStorage {
     private file: string;
 
