@@ -14,7 +14,7 @@ $(() => {
   setBoard(520, 520, 8, 8);
   setPieces();
   drawBoard();
-  setInterval(() => $.get('chess.php?getFigures', setFigures), 100);
+  setInterval(() => $.get(apiPath + 'chess?getFigures', setFigures), 100);
 
   $('#game-input').on('input', function () {
     const pos = this.selectionStart;
@@ -23,6 +23,7 @@ $(() => {
   });
 });
 
+const apiPath   = 'https://keronon-schemata.vercel.app/api/';
 const divMove   = (move         ) => `<p class="move">${move}</p>`;
 const divSquare = (coord, color ) => `<div id="s${coord}" class="square ${color}"></div>`;
 const divFigure = (coord, figure) => `<div id="f${coord}" class="figure">${figure}</div>`;
@@ -70,7 +71,7 @@ function getFEN(pos) {
 }
 
 function loadGame(set) {
-  $.get(`chess.php?setFigures&set=${set}`);
+  $.get(apiPath + 'chess?setFigures&set=' + set);
 }
 
 function newGame() {
@@ -149,27 +150,27 @@ function setFigures(data) {
   if (isAction) return;
   if (!data)    return;
 
-  let [set, ...moves] = data.split('-');
-  if (curSet == set) return;
+  let game = JSON.parse(data);
+  if (curSet == game.set) return;
 
   log(`func : ${setFigures.name}`);
 
-  $('#game-input').val(set);
-  curSet = set;
+  $('#game-input').val(game.set);
+  curSet = game.set;
 
   for (let coord = 0; coord < boardSize.length; coord++) {
-    placeFigure(coord, set.charAt(coord));
+    placeFigure(coord, game.set.charAt(coord));
   }
 
   $('#move-record').empty();
-  if (!moves[0]) return;
-  for (let moveNum in moves) {
-    const move = moves[moveNum].match(/(\d+)(.)(\d+)(.)/);
+  if (!game.moves[0]) return;
+  for (let moveNum in game.moves) {
+    const move = game.moves[moveNum];
     recordMove(
       `${+moveNum + 1} : ${
-        move[2] == '_' ? '&#12276;' : pieceSet[move[2]]
-      } ${getFEN(move[1])} ${move[1] == move[3] ? '+!' : getFEN(move[3])} ${
-        move[4] == '_' ? '&#12276;' : pieceSet[move[4]]
+        move.fromFig == '_' ? '&#12276;' : pieceSet[move.fromFig]
+      } ${getFEN(move.fromPos)} ${ move.fromPos == move.toPos ? '+!' : getFEN(move.toPos) } ${
+        move.toFig   == '_' ? '&#12276;' : pieceSet[move.toFig]
       }`
     );
   }
@@ -197,7 +198,7 @@ function setFigure(to, figure) {
   if (map[to] == figure) return;
 
   placeFigure(to, figure);
-  $.get(`chess.php?setFigure&to=${to}&figure=${figure}`);
+  $.get(`${apiPath}chess?setFigure&to=${to}&figure=${figure}`);
 }
 
 function moveFigure(from, to) {
@@ -210,7 +211,7 @@ function moveFigure(from, to) {
 
   placeFigure(to, map[from]);
   placeFigure(from, '_');
-  $.get(`chess.php?moveFigure&from=${from}&to=${to}`);
+  $.get(`${apiPath}chess?moveFigure&from=${from}&to=${to}`);
 }
 
 function undoMove() {
@@ -218,5 +219,5 @@ function undoMove() {
 
   if ($('#move-record').is(':empty')) return;
 
-  $.get('chess.php?undoMove');
+  $.get(apiPath + 'chess?undoMove');
 }
