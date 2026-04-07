@@ -1,5 +1,4 @@
 import base from './base/base.js';
-const log = console.log;
 
 $(() => {
   $('div#overlay' ).on('click', () => base.popup.closePopup());

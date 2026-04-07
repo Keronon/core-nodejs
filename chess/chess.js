@@ -1,5 +1,4 @@
 import base from '../base/base.js';
-const log = console.log;
 
 $(() => {
   $('div#overlay'       ).on('click', () => base.popup.closePopup()       );
@@ -14,13 +13,23 @@ $(() => {
   setBoard(520, 520, 8, 8);
   setPieces();
   drawBoard();
-  setInterval(() => $.get(apiPath + 'chess?getFigures', setFigures), 100);
 
   $('#game-input').on('input', function () {
     const pos = this.selectionStart;
     $(this).val( $(this).val().replace(/[^pnbrqk_PNBRQK]/g, '').padEnd(boardSize.length, '_').slice(0, boardSize.length) );
     this.setSelectionRange(pos, pos);
   });
+
+  // =====
+  
+  const getSet = () => $.get(apiPath + 'chess?getFigures')
+                        .done((set) => {
+                          setsCounter == 99 ? setsCounter = 0 : setsCounter++;
+                          setFigures(set, setsCounter);
+                        })
+                        .fail  ((err) => console.error('Ошибка в getSet : ', err))
+                        .always(()    => setTimeout(() => getSet(), 500)         );
+  getSet();
 });
 
 const apiPath   = 'https://keronon-schemata.vercel.app/api/';
@@ -56,11 +65,12 @@ let boardSize = {
   get size()   { return this.width   * this.height;  },
   get length() { return this.xSquare * this.ySquare; }
 };
-let map    = [];
-let curSet = '';
+let map         = [];
+let curSet      = '';
+let setsCounter = 0;
 
 let isFlipped = false;
-let isAction  = false;
+let isActive  = false;
 
 function isBlack(coord) {
   return (coord % boardSize.xSquare + Math.floor(coord / boardSize.xSquare)) % 2 ;
@@ -93,7 +103,7 @@ function flipBoard() {
 }
 
 function setBoard(width, height, xSquare, ySquare) {
-  log(`func : ${setBoard.name}`);
+  console.log(`func : ${setBoard.name}`);
 
   boardSize.width   = width;
   boardSize.height  = height;
@@ -109,20 +119,20 @@ function setBoard(width, height, xSquare, ySquare) {
 }
 
 function setPieces() {
-  log(`func : ${setPieces.name}`);
+  console.log(`func : ${setPieces.name}`);
 
   $('#pieces').html('');
   for (let piece in pieceSet) {
     $('#pieces').append(divPiece(piece, piece == '_' ? '&#9932;' : pieceSet[piece]));
     $('#'+piece).draggable({
-      start: (event, ui) => { isAction = true; },
+      start: (event, ui) => { isActive = true; },
       containment: '#board'
     });
   }
 }
 
 function drawBoard() {
-  log(`func : ${drawBoard.name}`);
+  console.log(`func : ${drawBoard.name}`);
 
   $('#board').html('');
   for (let coord = 0; coord < boardSize.length; coord++) {
@@ -140,18 +150,32 @@ function drawBoard() {
           setFigure(this.id.substring(1), id);
           ui.draggable.attr('style', 'position: relative;');
         }
-        isAction = false;
+        isActive = false;
       }
     });
   }
 }
 
-function setFigures(data) {
-  if (isAction) return;
-  if (!data)    return;
-  if (curSet == data.set) return;
+function setFigures(data, setsNum) {
+  console.log(`func : ${setFigures.name}`);
 
-  log(`func : ${setFigures.name}`);
+  if (setsNum != setsCounter) {
+    console.log(`- old set`);
+    return;
+  }
+  if (isActive) {
+    console.log(`- board is active`);
+    setTimeout(() => setFigures(data, setsNum), 500);
+    return;
+  }
+  if (!data) {
+    console.log(`- void data`);
+    return;
+  }
+  if (curSet == data.set) {
+    console.log(`- same set`);
+    return;
+  }
 
   $('#game-input').val(data.set);
   curSet = data.set;
@@ -179,7 +203,7 @@ function placeFigure(to, figure, isForce = false) {
 
   $('#s' + to).html(divFigure(to, pieceSet[figure]));
   $('#f' + to).draggable({
-    start: (event, ui) => { isAction = true; },
+    start: (event, ui) => { isActive = true; },
     containment: '#board'
   });
   map[to] = figure;
@@ -191,7 +215,7 @@ function recordMove(move) {
 }
 
 function setFigure(to, figure) {
-  log(`func : ${setFigure.name}(${to},${figure})`);
+  console.log(`func : ${setFigure.name}(${to},${figure})`);
 
   if (map[to] == figure) return;
 
@@ -200,7 +224,7 @@ function setFigure(to, figure) {
 }
 
 function moveFigure(from, to) {
-  log(`func : ${moveFigure.name}(${from},${to}) [ ${map[from]} ]`);
+  console.log(`func : ${moveFigure.name}(${from},${to}) [ ${map[from]} ]`);
 
   if (from == to) {
     placeFigure(to, map[from], true);
@@ -213,7 +237,7 @@ function moveFigure(from, to) {
 }
 
 function undoMove() {
-  log(`func : ${undoMove.name}()`);
+  console.log(`func : ${undoMove.name}()`);
 
   if ($('#move-record').is(':empty')) return;
 
