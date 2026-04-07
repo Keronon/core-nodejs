@@ -1,5 +1,5 @@
 import { setCharAt } from '../core';
-import { IStorage }  from './storage';
+import { _Storage  } from './storage';
 
 /**
  * record of chess move
@@ -29,16 +29,21 @@ class Move {
 class Game {
     set  : string;
     moves: Move[];
+    
+    constructor(set: string, moves: Move[]) {
+        this.set   = set;
+        this.moves = moves;
+    }
 
-    static is(obj: object): boolean {
+    static is(obj: any): boolean {
         return ('set' in obj) && ('moves' in obj);
     }
 }
 
 export class Board {
-    stor: IStorage;
+    stor: _Storage;
 
-    constructor(stor: IStorage) {
+    constructor(stor: _Storage) {
         this.stor = stor;
     }
 
@@ -46,16 +51,16 @@ export class Board {
         this.stor.save({set: set, moves: []} satisfies Game);
     }
 
-    getFigures(): object | Game {
-        return this.stor.load();
+    getFigures(): Game {
+        return this.stor.load() as Game;
     }
 
     setFigure(to: number, figure: string): void {
         const game : Game = this.stor.load() as Game;
         if (!game) { console.log('game is empty'); return; }
-        const toFig: string = game.set.at(to);
+        const toFig: string | undefined = game.set.at(to);
         
-        game.moves.push(new Move(to, figure, to, toFig));
+        game.moves.push(new Move(to, figure, to, toFig ?? '_'));
         game.set = setCharAt(game.set, to, figure);
         
         this.stor.save(game);
@@ -64,12 +69,12 @@ export class Board {
     moveFigure(from: number, to: number): void {
         const game : Game = this.stor.load() as Game;
         if (!game) { console.log('game is empty'); return; }
-        const frFig: string = game.set.at(from);
-        const toFig: string = game.set.at(to);
+        const frFig: string | undefined = game.set.at(from);
+        const toFig: string | undefined = game.set.at(to);
         
-        game.moves.push(new Move(from, frFig, to, toFig));
+        game.moves.push(new Move(from, frFig ?? '_', to, toFig ?? '_'));
         
-        game.set = setCharAt(game.set, to  , frFig);
+        game.set = setCharAt(game.set, to  , frFig ?? '_');
         game.set = setCharAt(game.set, from, '_');
         
         this.stor.save(game);
@@ -78,7 +83,7 @@ export class Board {
     undoMove(): void {
         const game: Game = this.stor.load() as Game;
         if (!game) { console.log('game is empty'); return; }
-        const move: Move = game.moves.pop();
+        const move: Move | undefined = game.moves.pop();
         if (!move) return;
         
         game.set = setCharAt(game.set, +move.fromPos, move.fromFig);
