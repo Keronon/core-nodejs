@@ -1,24 +1,34 @@
 import * as FS   from 'fs/promises';
 import * as Path from 'path';
 
-export interface IStorage {
-    save(obj: object): void;
-    load(): object;
+export abstract class _Storage {
+    protected stor_name: string     = '';
+    public    calls    : Function[] = [];
+    
+    public abstract save(obj: any): void;
+    public abstract load()           : any;
+
+    protected upCalls(): void{
+        this.calls.forEach(call => call());
+        this.calls.length = 0;
+    }
 }
 
-export class StorSession implements IStorage {
-    private stor_name: string;
-    private static sessions: object[] = [];
+type Sessions = Record<string, any>;
+export class StorSession extends _Storage {
+    private static sessions: Sessions = [];
 
     constructor(stor_name: string) {
+        super();
         this.stor_name = stor_name;
     }
 
-    save(obj: object): void {
+    save(obj: any): void {
         StorSession.sessions[this.stor_name] = obj;
+        this.upCalls();
     }
 
-    load(): object {
+    load(): any {
         return StorSession.sessions[this.stor_name];
     }
 }
@@ -26,52 +36,52 @@ export class StorSession implements IStorage {
 /**
  * useless with serverless function
  */
-export class StorFile implements IStorage {
-    private file: string;
-
+export class StorFile extends _Storage {
     constructor(path: string, file: string) {
-        this.file = Path.join('/tmp', path, file);
+        super();
+        this.stor_name = Path.join('/tmp', path, file);
 
-        FS.access(this.file).catch(() => {
-            const dir = Path.dirname(this.file);
+        FS.access(this.stor_name).catch(() => {
+            const dir = Path.dirname(this.stor_name);
             console.log('dir is : ' + dir);
             FS.mkdir(dir, { recursive: true })
-            .then ((   ) => { return FS.writeFile(this.file, '', 'utf-8'); })
-            .catch((err) => { console.log( 'ERROR on MkDir: ' + err );     });
+            .then (()  => { return FS.writeFile(this.stor_name, '', 'utf-8'); })
+            .catch(err => { console.log( 'ERROR on MkDir: ' + err );          });
         });
     }
 
-    save(obj: object): void {
-        FS.writeFile(this.file, JSON.stringify(obj, null, 2), 'utf-8');
+    save(obj: any): void {
+        FS.writeFile(this.stor_name, JSON.stringify(obj, null, 2), 'utf-8');
+        this.upCalls();
     }
 
     /**
-     * @returns stored object or error
+     * @returns stored value or error
      */
-    load(): object {
-        let obj: Object;
-        (async () => {
-            const file = await FS.readFile(this.file, 'utf-8');
-            obj = JSON.parse(file);
-        })();
-        return obj;
+    async load(): Promise<any> {
+        let val: any;
+        const file = await FS.readFile(this.stor_name, 'utf-8');
+        val = JSON.parse(file);
+        return val;
     }
 }
 
 /**
  * TODO:
-export class StorDB implements IStorage {
+export class StorDB extends IStorage {
     private pdo: PDO;
 
     constructor(dns, user, pass) {
+        super();
         this.pdo = new PDO(dns, user, pass);
     }
 
-    save(obj: object): void {
+    save(obj: any): void {
         this.pdo.prepare('UPDATE board SET figs = ?').execute(array(data));
+        this.upCalls();
     }
 
-    load(): object {
+    load(): any {
         return this.pdo.query('SELECT figs FROM board ORDER BY id').fetch()[0];
     }
 }

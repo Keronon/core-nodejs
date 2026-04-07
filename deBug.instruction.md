@@ -11,6 +11,7 @@ Updated package.json fields:
 Used commands :
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 npm install
+npm install --save-dev typescript@latest
 npx tsc
 node build/run.js
 */
