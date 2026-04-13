@@ -2,20 +2,17 @@
 /*
 FOR DEBUG
 
+Update  file package.json
 Created file tsconfig.json
-
-Updated package.json fields:
-"@types/node" to "^18.0.0",
-"@vercel/node": "^4.0.0"
 
 Used commands :
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 npm install
-npm install --save-dev typescript@latest
-npx tsc
+npm run build
 node build/run.js
 */
 
+// base test code
 const run = require("./chess");
 let req = {
     query: {
