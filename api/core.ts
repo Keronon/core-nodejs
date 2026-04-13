@@ -1,22 +1,24 @@
 import { join } from 'path';
 import * as fs  from 'fs';
 
-import handler from './index';
-export default handler;
-
-export const corsHeaderOptions = new Headers({
-    'Access-Control-Allow-Origin' : 'https://keronon.github.io',
-    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-});
-export const corsHeaderBase = new Headers({
-    'Access-Control-Allow-Origin' : 'https://keronon.github.io'
-});
-
-export type ReqError = {
+export type Res = {
     code: string;
     msg : string;
-} 
+    func: string;
+    data: {};
+};
+/**
+ * @returns objects of {@link Res}
+ * @params overwrite Res fields
+ */
+export const Ress = {
+    ok(func?: string, data?: {}): Res {
+        return {code: '0-0', msg: 'ok', func: func ?? '_', data: data ?? '_'};
+    },
+    un_req(func?: string, data?: {}): Res {
+        return {code: '1-404', msg: 'unknown request', func: func ?? '_', data: data ?? '_'};
+    }
+}
 
 /**
  * creates string-object that contains dir-files structure from "dir"-position recursively
