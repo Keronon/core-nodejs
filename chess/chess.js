@@ -1,4 +1,5 @@
 import base from '../base/base.js';
+import cfg  from '../base/config.js';
 
 $(() => {
   $('div#overlay'       ).on('click', () => base.popup.closePopup()       );
@@ -22,7 +23,7 @@ $(() => {
 
   // =====
   
-  const getSet = () => $.get(apiPath + 'chess?getFigures')
+  const getSet = () => $.get(cfg.apiPath + 'chess?getFigures')
                         .done((set) => {
                           setsCounter == 99 ? setsCounter = 0 : setsCounter++;
                           setFigures(set, setsCounter);
@@ -32,7 +33,6 @@ $(() => {
   getSet();
 });
 
-const apiPath   = 'https://keronon-schemata.vercel.app/api/';
 const divMove   = (move         ) => `<p class="move">${move}</p>`;
 const divSquare = (coord, color ) => `<div id="s${coord}" class="square ${color}"></div>`;
 const divFigure = (coord, figure) => `<div id="f${coord}" class="figure">${figure}</div>`;
@@ -81,7 +81,7 @@ function getFEN(pos) {
 }
 
 function loadGame(set) {
-  $.get(apiPath + 'chess?setFigures&set=' + set);
+  $.get(cfg.apiPath + 'chess?setFigures&set=' + set);
 }
 
 function newGame() {
@@ -220,7 +220,7 @@ function setFigure(to, figure) {
   if (map[to] == figure) return;
 
   placeFigure(to, figure);
-  $.get(`${apiPath}chess?setFigure&to=${to}&figure=${figure}`);
+  $.get(`${cfg.apiPath}chess?setFigure&to=${to}&figure=${figure}`);
 }
 
 function moveFigure(from, to) {
@@ -233,7 +233,7 @@ function moveFigure(from, to) {
 
   placeFigure(to, map[from]);
   placeFigure(from, '_');
-  $.get(`${apiPath}chess?moveFigure&from=${from}&to=${to}`);
+  $.get(`${cfg.apiPath}chess?moveFigure&from=${from}&to=${to}`);
 }
 
 function undoMove() {
@@ -241,5 +241,5 @@ function undoMove() {
 
   if ($('#move-record').is(':empty')) return;
 
-  $.get(apiPath + 'chess?undoMove');
+  $.get(cfg.apiPath + 'chess?undoMove');
 }
