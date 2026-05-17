@@ -17,6 +17,7 @@ app.use(cors({
     origin: ['https://keronon.github.io'],
     methods: ['GET', 'POST', 'OPTIONS', 'HEAD'],
     allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Location'],
     credentials: true
 }));
 
@@ -25,7 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // === API ===
 
-app.post('/api/chess', async (req, res) => await ctrl_chess(req, res));
+app.get('/api/chess', async (req, res) => await ctrl_chess(req, res));
 
 app.use((req, res) => { res.redirect(301, '/'); });
 
