@@ -9,7 +9,6 @@ dotenv.config();
 
 const app       = express();
 const PORT      = process.env.PORT || 3000;
-const DOCs_ROOT = path.join('/index.html');
 
 // === middleware ===
 
@@ -28,7 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.post('/api/chess', async (req, res) => await ctrl_chess(req, res));
 
-app.use((req, res) => { res.redirect(404, DOCs_ROOT); });
+app.use((req, res) => { res.redirect(301, '/index.html'); });
 
 // === Starter ===
 
