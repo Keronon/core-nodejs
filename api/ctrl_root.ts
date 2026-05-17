@@ -28,7 +28,9 @@ app.use(express.urlencoded({ extended: true }));
 
 app.post('/api/chess', async (req, res) => await ctrl_chess(req, res));
 
-app.use((req, res) => { res.status(404).sendFile(DOCs_ROOT); });
+app.use((req, res) => { res.redirect(404, DOCs_ROOT); });
+
+// === Starter ===
 
 const server = app.listen(PORT, () => {
     const address = server.address();
@@ -42,6 +44,8 @@ const server = app.listen(PORT, () => {
         console.log(`Сервер запущен на ${address}`);
     }
 });
+
+// === Render LifeKeeper ===
 
 const lifeKeeper = setInterval(async () => {
     console.log("keep alive");
