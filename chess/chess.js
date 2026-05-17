@@ -29,7 +29,7 @@ $(() => {
                           setFigures(set, setsCounter);
                         })
                         .fail  ((err) => console.error('Ошибка в getSet : ', err))
-                        .always(()    => setTimeout(() => getSet(), 500)         );
+                        .always(()    => setTimeout(() => getSet(), 0)           );
   getSet();
 });
 
