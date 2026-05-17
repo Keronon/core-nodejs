@@ -27,7 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.post('/api/chess', async (req, res) => await ctrl_chess(req, res));
 
-app.use((req, res) => { res.redirect(301, '/index.html'); });
+app.use((req, res) => { res.redirect(301, '/'); });
 
 // === Starter ===
 
