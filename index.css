@@ -20,6 +20,7 @@ body {
 }
 #canvas {
   animation: colorChange 2s infinite;
+  animation-play-state: running;
 }
 
 .menu-col {
