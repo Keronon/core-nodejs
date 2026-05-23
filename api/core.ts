@@ -21,6 +21,29 @@ export const Ress = {
 }
 
 /**
+ * creates console-object with prepared prefix
+ */
+export class Logger {
+    private _prefix: string;
+        
+    constructor(prefix: string) {
+        this._prefix = prefix;
+    }
+
+    info(...msg: any[]): void {
+        console.log(this._prefix, msg);
+    }
+
+    warn(...msg: any[]): void {
+        console.warn(this._prefix, msg);
+    }
+
+    err(...msg: any[]): void {
+        console.error(this._prefix, msg);
+    }
+}
+
+/**
  * creates string-object that contains dir-files structure from "dir"-position recursively
  * 
  * crashes if dir unexists
@@ -46,6 +69,9 @@ export function getDirStructure(dir: string, prefix: string = '', struct: string
     return struct;
 }
 
+/**
+ * inserts some char to position inside of string
+ */
 export function setCharAt(str: string, index: number, char: string): string {
     if (index < 0 || index >= str.length) {
         throw new Error("Индекс вне диапазона");

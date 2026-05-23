@@ -3,11 +3,12 @@ import express from 'express';
 import cors    from 'cors';
 import path    from 'path';
 
-import { Ress } from './core';
+import { Ress, Logger } from './core';
 import { default as ctrl_chess } from './ctrl_chess';
 
 dotenv.config();
 
+const log  = new Logger('== root == > ');
 const app  = express();
 const PORT = process.env.PORT || 3000;
 
@@ -30,7 +31,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/api/chess', async (req, res) => await ctrl_chess(req, res));
 
 app.get('/api/check', (req, res) => {
-    console.log('check done');
+    log.info('check done');
     res.json(Ress.ok());
 });
 
@@ -45,16 +46,16 @@ const server = app.listen(PORT, () => {
         const ip = address.address == '::' ? 'localhost' : address.address;
         const port = address.port;
 
-        console.log(`Сервер запущен на http://${ip}:${port}`);
+        log.info(`Сервер запущен на http://${ip}:${port}`);
     } else if (typeof address == 'string') {
-        console.log(`Сервер запущен на ${address}`);
+        log.info(`Сервер запущен на ${address}`);
     }
 });
 
 // === Render LifeKeeper ===
 
 const lifeKeeper = setInterval(async () => {
-    console.log("keep alive");
+    log.info("keep alive");
     try {
         const fetchData = {
             method: 'HEAD',
@@ -66,14 +67,14 @@ const lifeKeeper = setInterval(async () => {
 
         response = await fetch(checkPath, fetchData);
         if (response.ok) {
-            console.log('ok');
+            log.info('ok');
         } else {
-            console.warn(`nok status: ${response.status}`);
+            log.warn(`nok status: ${response.status}`);
         }
     } catch (error) {
-        if (error instanceof Error && error.name === 'AbortError') {
-            console.error("keep timeout");
+        if (error instanceof Error && error.name == 'AbortError') {
+            log.err("keep timeout");
         }
-        console.error("dead");
+        log.err("dead");
     }
 }, 600_000);

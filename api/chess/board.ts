@@ -1,5 +1,7 @@
-import { setCharAt } from '../core';
+import { setCharAt, Logger } from '../core';
 import { _Storage  } from './storage';
+
+const log = new Logger('== board == > ');
 
 /**
  * record of chess move
@@ -48,16 +50,21 @@ export class Board {
     }
 
     setFigures(set: string): void {
+        log.info(this.setFigures.name);
         this.stor.save({set: set, moves: []} satisfies Game);
     }
 
     getFigures(): Game {
+        log.info(this.getFigures.name);
         return this.stor.load() as Game;
     }
 
     setFigure(to: number, figure: string): void {
+        log.info(this.setFigure.name, to, figure);
+
         const game : Game = this.stor.load() as Game;
-        if (!game) { console.log('game is empty'); return; }
+        if (!game) { log.warn('game is empty'); return; }
+
         const toFig: string | undefined = game.set.at(to);
         
         game.moves.push(new Move(to, figure, to, toFig ?? '_'));
@@ -67,8 +74,11 @@ export class Board {
     }
 
     moveFigure(from: number, to: number): void {
+        log.info(this.moveFigure.name, from, to);
+
         const game : Game = this.stor.load() as Game;
-        if (!game) { console.log('game is empty'); return; }
+        if (!game) { log.warn('game is empty'); return; }
+
         const frFig: string | undefined = game.set.at(from);
         const toFig: string | undefined = game.set.at(to);
         
@@ -81,8 +91,11 @@ export class Board {
     }
 
     undoMove(): void {
+        log.info(this.undoMove.name);
+
         const game: Game = this.stor.load() as Game;
-        if (!game) { console.log('game is empty'); return; }
+        if (!game) { log.warn('game is empty'); return; }
+
         const move: Move | undefined = game.moves.pop();
         if (!move) return;
         
