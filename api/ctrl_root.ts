@@ -3,12 +3,13 @@ import express from 'express';
 import cors    from 'cors';
 import path    from 'path';
 
+import { Ress } from './core';
 import { default as ctrl_chess } from './ctrl_chess';
 
 dotenv.config();
 
-const app       = express();
-const PORT      = process.env.PORT || 3000;
+const app  = express();
+const PORT = process.env.PORT || 3000;
 
 // === middleware ===
 
@@ -27,6 +28,11 @@ app.use(express.urlencoded({ extended: true }));
 // === API ===
 
 app.get('/api/chess', async (req, res) => await ctrl_chess(req, res));
+
+app.get('/api/check', (req, res) => {
+    console.log('check done');
+    res.json(Ress.ok());
+});
 
 app.use((req, res) => { res.redirect(301, '/'); });
 
@@ -55,16 +61,10 @@ const lifeKeeper = setInterval(async () => {
             cache : 'no-cache',
             signal: AbortSignal.timeout(5000)
         };
-        const address = server.address();
+        const checkPath = 'https://keronon-schemata.onrender.com/api/check';
         let response: Response;
 
-        if (address && typeof address == 'object') {
-            response = await fetch('http://localhost:' + address.port, fetchData);
-        } else if (typeof address == 'string') {
-            response = await fetch(address, fetchData);
-        } else
-            return;
-
+        response = await fetch(checkPath, fetchData);
         if (response.ok) {
             console.log('ok');
         } else {
@@ -76,4 +76,4 @@ const lifeKeeper = setInterval(async () => {
         }
         console.error("dead");
     }
-}, 600000);
+}, 600_000);
