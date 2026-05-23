@@ -83,11 +83,15 @@ function setFigures(set) {
 }
 
 function flipBoard() {
-  isFlipped = !isFlipped;
-  drawBoard();
-  getFiguresNow();
+  map = new Array(boardSize.length);
+  curSet = '';
+
   $('#board-mark-cols').css('flex-direction', isFlipped ? 'row-reverse'    : 'row'   );
   $('#board-mark-rows').css('flex-direction', isFlipped ? 'column-reverse' : 'column');
+  isFlipped = !isFlipped;
+  
+  drawBoard();
+  getFiguresNow();
 }
 
 function setBoard(width, height, xSquare, ySquare) {
