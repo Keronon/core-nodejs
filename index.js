@@ -12,6 +12,9 @@ $(() => {
 
   ROWS = Math.round(canvas.height / CHAR_SIZE );
   COLS = Math.round(canvas.width  / CHAR_COVER);
+  canvas.style.animation = 'none';
+  canvas.offsetWidth;
+  canvas.style.animation = 'colorChange 2s infinite';
 
   charGrid   = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
   colorGrid  = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
