@@ -31,15 +31,15 @@ export class Logger {
     }
 
     info(...msg: any[]): void {
-        console.log(this._prefix, msg);
+        console.log(this._prefix, ...msg);
     }
 
     warn(...msg: any[]): void {
-        console.warn(this._prefix, msg);
+        console.warn(this._prefix, ...msg);
     }
 
     err(...msg: any[]): void {
-        console.error(this._prefix, msg);
+        console.error(this._prefix, ...msg);
     }
 }
 
