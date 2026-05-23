@@ -25,9 +25,9 @@ $(() => {
   // =====
   
   const getSet = () => $.get(cfg.apiPath + 'chess?getFigures')
-    .done  ((set) => drawFigures(set))
-    .fail  ((err) => console.error('Ошибка в getSet : ', err))
-    .always(()    => setTimeout(() => getSet(), 0));
+    .done  ((data) => drawFigures(data))
+    .fail  ((err)  => console.error('Ошибка в getSet : ', err))
+    .always(()     => setTimeout(() => getSet(), 0));
   getSet();
 });
 
@@ -71,8 +71,8 @@ function getFEN(pos) {
 
 function getFiguresNow() {
   $.get (cfg.apiPath + 'chess?getFiguresNow')
-   .done((set) => drawFigures(set))
-   .fail((err) => console.error('Ошибка в getFiguresNow : ', err))
+   .done((data) => drawFigures(data))
+   .fail((err)  => console.error('Ошибка в getFiguresNow : ', err))
 }
 
 function setFigures(set) {
@@ -147,7 +147,7 @@ function dropFigure (event, ui) {
 
 function drawFigures(data) {
   setsCounter == 99 ? setsCounter = 0 : setsCounter++;
-  _drawFigures(set, setsCounter);
+  _drawFigures(data, setsCounter);
 }
 function _drawFigures(data, setsNum = 0) {
   console.log(`func : ${drawFigures.name}`);
