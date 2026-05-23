@@ -8,7 +8,7 @@ import { default as ctrl_chess } from './ctrl_chess';
 
 dotenv.config();
 
-const log  = new Logger('== root == > ');
+const log  = new Logger('== root == >');
 const app  = express();
 const PORT = process.env.PORT || 3000;
 
