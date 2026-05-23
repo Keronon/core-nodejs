@@ -1,4 +1,4 @@
-import * as FS   from 'fs/promises';
+import * as FS   from 'fs';
 import * as Path from 'path';
 
 import { Logger } from '../core';
@@ -45,32 +45,30 @@ export class StorFile extends _Storage {
         super();
         this.stor_name = Path.join('/tmp', path, file);
 
-        FS.access(this.stor_name).catch(() => {
-            const dir = Path.dirname(this.stor_name);
-            log.warn('dir is : ' + dir);
+        try {
+            FS.accessSync(this.stor_name);
+        } catch {
+            log.warn('no access to', this.stor_name, 'mkdir + writeFile');
 
-            FS.mkdir(dir, { recursive: true })
-              .then (async ()  => {
-                  log.warn("mkdir + writeFile");
-                  await FS.writeFile(this.stor_name, '{}', 'utf-8');
-                  log.warn(this.stor_name);
-              })
-              .catch(err => log.err( 'ERROR on MkDir:', this.stor_name, err ));
-        });
+            const dir = Path.dirname(this.stor_name);
+            FS.mkdirSync(dir, { recursive: true })
+            FS.writeFileSync(this.stor_name, '{}', 'utf-8');
+            log.warn('done');
+        }
     }
 
-    async save(obj: any): Promise<void> {
+    save(obj: any): void {
         obj = obj ?? {};
-        await FS.writeFile(this.stor_name, JSON.stringify(obj, null, 2), 'utf-8');
+        FS.writeFileSync(this.stor_name, JSON.stringify(obj, null, 2), 'utf-8');
         this.upCalls();
     }
 
     /**
      * @returns stored value or error
      */
-    async load(): Promise<any> {
+    load(): any {
         let val: any;
-        let file = await FS.readFile(this.stor_name, 'utf-8');
+        let file = FS.readFileSync(this.stor_name, 'utf-8');
         file = !file || file.trim() == '' ? '{}' : file;
         val = JSON.parse(file);
         return val;
