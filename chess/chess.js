@@ -25,10 +25,7 @@ $(() => {
   // =====
   
   const getSet = () => $.get(cfg.apiPath + 'chess?getFigures')
-    .done((set) => {
-      setsCounter == 99 ? setsCounter = 0 : setsCounter++;
-      drawFigures(set, setsCounter);
-    })
+    .done  ((set) => drawFigures(set))
     .fail  ((err) => console.error('Ошибка в getSet : ', err))
     .always(()    => setTimeout(() => getSet(), 0));
   getSet();
@@ -148,7 +145,11 @@ function dropFigure (event, ui) {
   isActive = false;
 }
 
-function drawFigures(data, setsNum = 0) {
+function drawFigures(data) {
+  setsCounter == 99 ? setsCounter = 0 : setsCounter++;
+  _drawFigures(set, setsCounter);
+}
+function _drawFigures(data, setsNum = 0) {
   console.log(`func : ${drawFigures.name}`);
 
   if (setsNum != setsCounter) {
@@ -157,7 +158,7 @@ function drawFigures(data, setsNum = 0) {
   }
   if (isActive) {
     console.log(`- board is active`);
-    setTimeout(() => drawFigures(data, setsNum), 500);
+    setTimeout(() => _drawFigures(data, setsNum), 500);
     return;
   }
   if (!data) {
