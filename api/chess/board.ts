@@ -1,7 +1,7 @@
 import { setCharAt, Logger } from '../core';
 import { _Storage  } from './storage';
 
-const log = new Logger('== board == > ');
+const log = new Logger('== board == >');
 
 /**
  * record of chess move
