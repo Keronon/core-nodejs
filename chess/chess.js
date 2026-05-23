@@ -2,18 +2,19 @@ import base from '../base/base.js';
 import cfg  from '../base/config.js';
 
 $(() => {
-  $('div#overlay'       ).on('click', () => base.popup.closePopup()       );
-  $('button#new'        ).on('click', () => newGame()                     );
-  $('button#flip'       ).on('click', () => flipBoard()                   );
-  $('button#undo'       ).on('click', () => undoMove()                    );
-  $('button#main'       ).on('click', () => base.openLink('../index.html'));
-  $('button#save-record').on('click', () => setGame()                     );
+  $('div#overlay'       ).on('click', () => base.popup.closePopup()            );
+  $('button#new'        ).on('click', () => { setFigures(newClassicSet); $('#game-input').val(newClassicSet); });
+  $('button#flip'       ).on('click', () => flipBoard()                        );
+  $('button#undo'       ).on('click', () => undoMove()                         );
+  $('button#main'       ).on('click', () => base.openLink('../index.html')     );
+  $('button#save-record').on('click', () => setFigures($('#game-input').val()) );
 
   // =====
 
   setBoard(520, 520, 8, 8);
   setPieces();
   drawBoard();
+  getFiguresNow();
 
   $('#game-input').on('input', function () {
     const pos = this.selectionStart;
@@ -24,12 +25,12 @@ $(() => {
   // =====
   
   const getSet = () => $.get(cfg.apiPath + 'chess?getFigures')
-                        .done((set) => {
-                          setsCounter == 99 ? setsCounter = 0 : setsCounter++;
-                          setFigures(set, setsCounter);
-                        })
-                        .fail  ((err) => console.error('Ошибка в getSet : ', err))
-                        .always(()    => setTimeout(() => getSet(), 0)           );
+    .done((set) => {
+      setsCounter == 99 ? setsCounter = 0 : setsCounter++;
+      drawFigures(set, setsCounter);
+    })
+    .fail  ((err) => console.error('Ошибка в getSet : ', err))
+    .always(()    => setTimeout(() => getSet(), 0));
   getSet();
 });
 
@@ -41,20 +42,11 @@ const divPiece  = (piece, figure) => `<div id="${piece}"  class="piece" >${figur
 const pieceSet = {
   // &#12276; empty square
   // &#9932;  X
-  K: '&#9812;',
-  Q: '&#9813;',
-  R: '&#9814;',
-  B: '&#9815;',
-  N: '&#9816;',
-  P: '&#9817;',
-  k: '&#9818;',
-  q: '&#9819;',
-  r: '&#9820;',
-  b: '&#9821;',
-  n: '&#9822;',
-  p: '&#9823;',
+  K: '&#9812;', Q: '&#9813;', R: '&#9814;', B: '&#9815;', N: '&#9816;', P: '&#9817;',
+  k: '&#9818;', q: '&#9819;', r: '&#9820;', b: '&#9821;', n: '&#9822;', p: '&#9823;',
   _: ''
 };
+
 const newClassicSet = 'rnbqkbnrpppppppp________________________________PPPPPPPPRNBQKBNR';
 
 let boardSize = {
@@ -80,24 +72,20 @@ function getFEN(pos) {
   return String.fromCharCode(pos % boardSize.xSquare + 97) + String.fromCharCode(boardSize.xSquare - 1 - Math.floor(pos / boardSize.xSquare) + 49);
 }
 
-function loadGame(set) {
+function getFiguresNow() {
+  $.get (cfg.apiPath + 'chess?getFiguresNow')
+   .done((set) => drawFigures(set))
+   .fail((err) => console.error('Ошибка в getFiguresNow : ', err))
+}
+
+function setFigures(set) {
   $.get(cfg.apiPath + 'chess?setFigures&set=' + set);
-}
-
-function newGame() {
-  loadGame(newClassicSet);
-  $('#game-input').val(newClassicSet);
-}
-
-function setGame() {
-  loadGame($('#game-input').val());
 }
 
 function flipBoard() {
   isFlipped = !isFlipped;
-  map       = new Array(boardSize.length);
-  curSet    = '';
   drawBoard();
+  getFiguresNow();
   $('#board-mark-cols').css('flex-direction', isFlipped ? 'row-reverse'    : 'row'   );
   $('#board-mark-rows').css('flex-direction', isFlipped ? 'column-reverse' : 'column');
 }
@@ -138,26 +126,26 @@ function drawBoard() {
   for (let coord = 0; coord < boardSize.length; coord++) {
     const posCoord = isFlipped ? boardSize.length - 1 - coord : coord;
     $('#board').append(divSquare(posCoord, isBlack(coord) ? 'black' : 'white'));
-    $('#s'+posCoord).droppable({
-      drop: function (event, ui) {
-        const id = ui.draggable.attr('id');
-        if (id[0] == 'f') {
-          moveFigure(
-            ui.draggable.attr('id').substring(1),
-            this.id.substring(1), //event.target.attributes.id.value.substring(1)
-          );
-        } else {
-          setFigure(this.id.substring(1), id);
-          ui.draggable.attr('style', 'position: relative;');
-        }
-        isActive = false;
-      }
-    });
+    $('#s'+posCoord).droppable({ drop: dropFigure });
   }
 }
 
-function setFigures(data, setsNum) {
-  console.log(`func : ${setFigures.name}`);
+function dropFigure (event, ui) {
+  const id = ui.draggable.attr('id');
+  if (id[0] == 'f') {
+    moveFigure(
+      ui.draggable.attr('id').substring(1),
+      this.id.substring(1), //event.target.attributes.id.value.substring(1)
+    );
+  } else {
+    setFigure(this.id.substring(1), id);
+    ui.draggable.attr('style', 'position: relative;');
+  }
+  isActive = false;
+}
+
+function drawFigures(data, setsNum = 0) {
+  console.log(`func : ${drawFigures.name}`);
 
   if (setsNum != setsCounter) {
     console.log(`- old set`);
@@ -165,7 +153,7 @@ function setFigures(data, setsNum) {
   }
   if (isActive) {
     console.log(`- board is active`);
-    setTimeout(() => setFigures(data, setsNum), 500);
+    setTimeout(() => drawFigures(data, setsNum), 500);
     return;
   }
   if (!data) {
@@ -181,7 +169,7 @@ function setFigures(data, setsNum) {
   curSet = data.set;
 
   for (let coord = 0; coord < boardSize.length; coord++) {
-    placeFigure(coord, data.set.charAt(coord));
+    drawFigure(coord, data.set.charAt(coord));
   }
 
   $('#move-record').empty();
@@ -198,7 +186,7 @@ function setFigures(data, setsNum) {
   }
 }
 
-function placeFigure(to, figure, isForce = false) {
+function drawFigure(to, figure, isForce = false) {
   if (!isForce && map[to] == figure) return;
 
   $('#s' + to).html(divFigure(to, pieceSet[figure]));
@@ -219,7 +207,7 @@ function setFigure(to, figure) {
 
   if (map[to] == figure) return;
 
-  placeFigure(to, figure);
+  drawFigure(to, figure);
   $.get(`${cfg.apiPath}chess?setFigure&to=${to}&figure=${figure}`);
 }
 
@@ -227,12 +215,12 @@ function moveFigure(from, to) {
   console.log(`func : ${moveFigure.name}(${from},${to}) [ ${map[from]} ]`);
 
   if (from == to) {
-    placeFigure(to, map[from], true);
+    drawFigure(to, map[from], true);
     return;
   }
 
-  placeFigure(to, map[from]);
-  placeFigure(from, '_');
+  drawFigure(to, map[from]);
+  drawFigure(from, '_');
   $.get(`${cfg.apiPath}chess?moveFigure&from=${from}&to=${to}`);
 }
 
