@@ -1,12 +1,16 @@
 import * as FS   from 'fs/promises';
 import * as Path from 'path';
 
+import { Logger } from '../core';
+
+const log = new Logger('== storage == >');
+
 export abstract class _Storage {
     protected stor_name: string     = '';
     public    calls    : Function[] = [];
     
     public abstract save(obj: any): void;
-    public abstract load()           : any;
+    public abstract load(): any;
 
     protected upCalls(): void{
         this.calls.forEach(call => call());
@@ -43,15 +47,20 @@ export class StorFile extends _Storage {
 
         FS.access(this.stor_name).catch(() => {
             const dir = Path.dirname(this.stor_name);
-            console.log('dir is : ' + dir);
+            log.warn('dir is : ' + dir);
+
             FS.mkdir(dir, { recursive: true })
-            .then (()  => { return FS.writeFile(this.stor_name, '', 'utf-8'); })
-            .catch(err => { console.log( 'ERROR on MkDir: ' + err );          });
+              .then (()  => {
+                  log.warn("mkdir + writeFile");
+                  FS.writeFile(this.stor_name, '', 'utf-8');
+                  log.warn(FS.access(this.stor_name));
+              })
+              .catch(err => log.err( 'ERROR on MkDir:', this.stor_name, err ));
         });
     }
 
-    save(obj: any): void {
-        FS.writeFile(this.stor_name, JSON.stringify(obj, null, 2), 'utf-8');
+    async save(obj: any): Promise<void> {
+        await FS.writeFile(this.stor_name, JSON.stringify(obj, null, 2), 'utf-8');
         this.upCalls();
     }
 
