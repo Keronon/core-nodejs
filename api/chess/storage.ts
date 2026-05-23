@@ -50,10 +50,10 @@ export class StorFile extends _Storage {
             log.warn('dir is : ' + dir);
 
             FS.mkdir(dir, { recursive: true })
-              .then (()  => {
+              .then (async ()  => {
                   log.warn("mkdir + writeFile");
-                  FS.writeFile(this.stor_name, '', 'utf-8');
-                  log.warn(FS.access(this.stor_name));
+                  await FS.writeFile(this.stor_name, '', 'utf-8');
+                  log.warn(await FS.access(this.stor_name));
               })
               .catch(err => log.err( 'ERROR on MkDir:', this.stor_name, err ));
         });
