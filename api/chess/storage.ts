@@ -52,14 +52,15 @@ export class StorFile extends _Storage {
             FS.mkdir(dir, { recursive: true })
               .then (async ()  => {
                   log.warn("mkdir + writeFile");
-                  await FS.writeFile(this.stor_name, '', 'utf-8');
-                  log.warn(await FS.access(this.stor_name));
+                  await FS.writeFile(this.stor_name, '{}', 'utf-8');
+                  log.warn(this.stor_name);
               })
               .catch(err => log.err( 'ERROR on MkDir:', this.stor_name, err ));
         });
     }
 
     async save(obj: any): Promise<void> {
+        obj = obj ?? {};
         await FS.writeFile(this.stor_name, JSON.stringify(obj, null, 2), 'utf-8');
         this.upCalls();
     }
@@ -69,7 +70,8 @@ export class StorFile extends _Storage {
      */
     async load(): Promise<any> {
         let val: any;
-        const file = await FS.readFile(this.stor_name, 'utf-8');
+        let file = await FS.readFile(this.stor_name, 'utf-8');
+        file = !file || file.trim() == '' ? '{}' : file;
         val = JSON.parse(file);
         return val;
     }
