@@ -3,7 +3,11 @@ import cfg  from '../base/config.js';
 
 $(() => {
   $('div#overlay'       ).on('click', () => base.popup.closePopup()            );
-  $('button#new'        ).on('click', () => { setFigures(newClassicSet); $('#game-input').val(newClassicSet); });
+  $('button#new'        ).on('click', () => {
+                                              setFigures(newClassicSet);
+                                              setBoard(boardSize.width, boardSize.height, 8, 8);
+                                              $('#game-input').val(newClassicSet);
+                                            });
   $('button#flip'       ).on('click', () => flipBoard()                        );
   $('button#undo'       ).on('click', () => undoMove()                         );
   $('button#main'       ).on('click', () => base.openLink('../index.html')     );
@@ -12,7 +16,6 @@ $(() => {
 
   // =====
 
-  setBoard(boardSize.width, boardSize.height, boardSize.xSquare, boardSize.ySquare);
   drawPieces();
   getGameNow();
 
