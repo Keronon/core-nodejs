@@ -13,24 +13,34 @@
 <body>
     <div id="overlay"> <div id="popup"></div> </div>
     <div id="body">
-        <div id="menu" class="menu-row">
-            <button id="new"  class="btn">NEW GAME  </button>
-            <button id="flip" class="btn">FLIP BOARD</button>
-            <button id="undo" class="btn">UNDO MOVE </button>
-            <button id="main" class="btn">MAIN MENU </button>
+        <div id="menu" class="flex-row">
+            <div id="board-size" class="flex-row flex-11 border">
+                <p class="in flex-size" style="--val: 25%;">Board size:</p>
+                <input type="number" step="1" id="board-x" class="flex-size c" style="--val: 20%;"/>
+                <p class="in c flex-size" style="--val: 5%;">X</p>
+                <input type="number" step="1" id="board-y" class="flex-size c" style="--val: 20%;"/>
+                <button id="save-size" class="btn flex-size" style="--val: 5%;">🖫</button>
+            </div>
+            <button id="new"  class="btn flex-12">NEW GAME  </button>
+            <button id="flip" class="btn flex-12">FLIP BOARD</button>
+            <button id="undo" class="btn flex-12">UNDO MOVE </button>
+            <button id="main" class="btn flex-12">MAIN MENU </button>
         </div>
-        <div id="pieces" class="menu-col"></div>
+        <div id="pieces" class="flex-col border"></div>
         <div id="board"></div>
-        <div id="board-mark-cols" class="menu-row">
+        <div id="board-mark-cols" class="flex-row">
             <p class="mark">a</p><p class="mark">b</p><p class="mark">c</p><p class="mark">d</p>
             <p class="mark">e</p><p class="mark">f</p><p class="mark">g</p><p class="mark">h</p>
         </div>
-        <div id="board-mark-rows" class="menu-col">
+        <div id="board-mark-rows" class="flex-col">
             <p class="mark">8</p><p class="mark">7</p><p class="mark">6</p><p class="mark">5</p>
             <p class="mark">4</p><p class="mark">3</p><p class="mark">2</p><p class="mark">1</p>
         </div>
-        <div id="move-record" class="menu-col"></div>
-        <div id="game-record"><input type="text" id="game-input"/><button id="save-record" class="btn">🖫</button></div>
+        <div id="move-record" class="flex-col border"></div>
+        <div id="game-record" class="border">
+            <input type="text" id="game-input" class="flex-size" style="--val: 90%;"/>
+            <button id="save-record" class="btn flex-size" style="--val: 8%;">🖫</button>
+        </div>
     </div>
 </body>
 </html>

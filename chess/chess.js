@@ -8,18 +8,38 @@ $(() => {
   $('button#undo'       ).on('click', () => undoMove()                         );
   $('button#main'       ).on('click', () => base.openLink('../index.html')     );
   $('button#save-record').on('click', () => setFigures($('#game-input').val()) );
+  $('button#save-size'  ).on('click', () => setBoard(boardSize.width, boardSize.height, $('#board-x').val(), $('#board-y').val()));
 
   // =====
 
-  setBoard(520, 520, 8, 8);
-  setPieces();
-  drawBoard();
+  setBoard(boardSize.width, boardSize.height, boardSize.xSquare, boardSize.ySquare);
+  drawPieces();
   getFiguresNow();
 
   $('#game-input').on('input', function () {
     const pos = this.selectionStart;
-    $(this).val( $(this).val().replace(/[^pnbrqk_PNBRQK]/g, '').padEnd(boardSize.length, '_').slice(0, boardSize.length) );
+    $(this).val(
+      $(this).val()
+             .replace(/[^pnbrqk_PNBRQK]/g, '')
+             .padEnd(boardSize.length, '_')
+             .slice(0, boardSize.length)
+    );
     this.setSelectionRange(pos, pos);
+  });
+
+  $('#board-x').on('input', function () {
+    $(this).val(
+      $(this).val() <  1 ?  1 : 
+      $(this).val() > 25 ? 25 :
+      $(this).val()
+    );
+  });
+  $('#board-y').on('input', function () {
+    $(this).val(
+      $(this).val() <  1 ?  1 : 
+      $(this).val() > 25 ? 25 :
+      $(this).val()
+    );
   });
 
   // =====
@@ -100,15 +120,23 @@ function setBoard(width, height, xSquare, ySquare) {
   boardSize.ySquare = ySquare;
   map = new Array(boardSize.length);
   curSet = '';
+
   const rootStyle = document.documentElement.style;
   rootStyle.setProperty('--board-width'  , width  + 'px');
   rootStyle.setProperty('--board-height' , height + 'px');
   rootStyle.setProperty('--board-xSquare', xSquare);
   rootStyle.setProperty('--board-ySquare', ySquare);
+
+  $('#board-x').val(xSquare);
+  $('#board-y').val(ySquare);
+  
+  drawBoard();
+
+  $.get(`${cfg.apiPath}chess?setBoard&x=${xSquare}&y=${ySquare}`);
 }
 
-function setPieces() {
-  console.log(`func : ${setPieces.name}`);
+function drawPieces() {
+  console.log(`func : ${drawPieces.name}`);
 
   $('#pieces').html('');
   for (let piece in pieceSet) {
