@@ -24,14 +24,14 @@ export default async function handler(req: express.Request, res: express.Respons
     switch (func) {
         case 'getGame': board.stor.calls.push( () => resolve(res.json(board.getGame())) );
             break;
-        case 'getFiguresNow': return res.json(board.getGame());
-        case 'setFigures'   : return res.json(board.setFigures( data.set               ));
-        case 'setFigure'    : return res.json(board.setFigure (+data.to  ,  data.figure));
-        case 'moveFigure'   : return res.json(board.moveFigure(+data.from, +data.to    ));
-        case 'undoMove'     : return res.json(board.undoMove  (                        ));
-        case 'setBoard'     : return res.json(board.setBoard  (+data.x   , +data.y     ));
-        case 'check'        : return res.json(Ress.ok    (func, data));
-        default             : return res.json(Ress.un_req(func, data));
+        case 'getGameNow': return res.json(board.getGame());
+        case 'setFigures': return res.json(board.setFigures( data.set               ));
+        case 'setFigure' : return res.json(board.setFigure (+data.to  ,  data.figure));
+        case 'moveFigure': return res.json(board.moveFigure(+data.from, +data.to    ));
+        case 'undoMove'  : return res.json(board.undoMove  (                        ));
+        case 'setBoard'  : return res.json(board.setBoard  (+data.x   , +data.y     ));
+        case 'check'     : return res.json(Ress.ok    (func, data));
+        default          : return res.json(Ress.un_req(func, data));
     }
     return await promise;
 }
