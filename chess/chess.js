@@ -14,7 +14,7 @@ $(() => {
 
   setBoard(boardSize.width, boardSize.height, boardSize.xSquare, boardSize.ySquare);
   drawPieces();
-  getFiguresNow();
+  getGameNow();
 
   $('#game-input').on('input', function () {
     const pos = this.selectionStart;
@@ -44,11 +44,11 @@ $(() => {
 
   // =====
   
-  const getSet = () => $.get(cfg.apiPath + 'chess?getFigures')
+  const getGame = () => $.get(cfg.apiPath + 'chess?getGame')
     .done  ((data) => drawFigures(data))
-    .fail  ((err)  => console.error('Ошибка в getSet : ', err))
+    .fail  ((err)  => console.error('Ошибка в getGame : ', err))
     .always(()     => setTimeout(() => getSet(), 0));
-  getSet();
+  getGame();
 });
 
 const divMove   = (move         ) => `<p class="move">${move}</p>`;
@@ -89,10 +89,10 @@ function getFEN(pos) {
   return String.fromCharCode(pos % boardSize.xSquare + 97) + String.fromCharCode(boardSize.xSquare - 1 - Math.floor(pos / boardSize.xSquare) + 49);
 }
 
-function getFiguresNow() {
-  $.get (cfg.apiPath + 'chess?getFiguresNow')
+function getGameNow() {
+  $.get (cfg.apiPath + 'chess?getGameNow')
    .done((data) => drawFigures(data))
-   .fail((err)  => console.error('Ошибка в getFiguresNow : ', err))
+   .fail((err)  => console.error('Ошибка в getGameNow : ', err))
 }
 
 function setFigures(set) {
@@ -108,10 +108,10 @@ function flipBoard() {
   isFlipped = !isFlipped;
   
   drawBoard();
-  getFiguresNow();
+  getGameNow();
 }
 
-function setBoard(width, height, xSquare, ySquare) {
+function setBoard(width, height, xSquare, ySquare, isGot = false) {
   console.log(`func : ${setBoard.name}`);
 
   boardSize.width   = width;
@@ -132,7 +132,7 @@ function setBoard(width, height, xSquare, ySquare) {
   
   drawBoard();
 
-  $.get(`${cfg.apiPath}chess?setBoard&x=${xSquare}&y=${ySquare}`);
+  if (!isGot) $.get(`${cfg.apiPath}chess?setBoard&x=${xSquare}&y=${ySquare}`);
 }
 
 function drawPieces() {
@@ -196,6 +196,10 @@ function _drawFigures(data, setsNum = 0) {
   if (curSet == data.set) {
     console.log(`- same set`);
     return;
+  }
+
+  if (data.field.x != boardSize.xSquare || data.field.y != boardSize.ySquare) {
+    setBoard(boardSize.width, boardSize.height, data.field.x, data.field.y, true);
   }
 
   $('#game-input').val(data.set);
