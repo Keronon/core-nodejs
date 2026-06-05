@@ -1,14 +1,31 @@
-import { setCharAt, Logger } from '../core';
+import { replaceCharAt, Logger, Res, Ress } from '../core';
 import { _Storage  } from './storage';
 
 const log = new Logger('== board == >');
+const noFig = '_';
+
+/**
+ * field size
+ * 
+ * @property {number} x - width of field
+ * @property {number} y - height of field
+ */
+class Field {
+    x: number;
+    y: number;
+
+    constructor(x: number, y: number) {
+        this.x = x;
+        this.y = y;
+    }
+}
 
 /**
  * record of chess move
  * 
- * @property {string} fromPos - position where from move starts
+ * @property {number} fromPos - position where from move starts
  * @property {string} fromFig - figure   that  move starts
- * @property {string} toPos   - position where to   move ends
+ * @property {number} toPos   - position where to   move ends
  * @property {string} toFig   - figure   that  move ends
  */
 class Move {
@@ -29,10 +46,12 @@ class Move {
  * type for storing game
  */
 class Game {
+    field: Field;
     set  : string;
     moves: Move[];
     
-    constructor(set: string, moves: Move[]) {
+    constructor(field: Field, set: string, moves: Move[]) {
+        this.field = field;
         this.set   = set;
         this.moves = moves;
     }
@@ -44,64 +63,95 @@ class Game {
 
 export class Board {
     stor: _Storage;
+    game: Game;
 
     constructor(stor: _Storage) {
         this.stor = stor;
+        this.game = this.stor.load() as Game;
     }
 
-    setFigures(set: string): void {
+    setBoard(x: number, y: number): Res {
+        log.info(this.setBoard.name, x, y);
+        this.game.field.x = x;
+        this.game.field.y = y;
+        this.game.set = '';
+        this.game.moves = [];
+        this.stor.save(this.game);
+        return Ress.ok();
+    }
+
+    setFigures(set: string): Res {
         log.info(this.setFigures.name);
-        this.stor.save({set: set, moves: []} satisfies Game);
+        this.game.set = set;
+        this.game.moves = [];
+        this.stor.save(this.game);
+        return Ress.ok();
     }
 
-    getFigures(): Game {
-        log.info(this.getFigures.name);
-        return this.stor.load() as Game;
+    getGame(): Game {
+        log.info(this.getGame.name);
+        return this.game;
     }
 
-    setFigure(to: number, figure: string): void {
+    setFigure(to: number, figure: string): Res {
         log.info(this.setFigure.name, to, figure);
 
-        const game : Game = this.stor.load() as Game;
-        if (!game) { log.warn('game is empty'); return; }
+        if (!this.game) {
+            const msg = 'game is empty';
+            log.warn(msg);
+            return Ress.nok(undefined, msg);
+        }
 
-        const toFig: string | undefined = game.set.at(to);
+        const toFig: string | undefined = this.game.set.at(to);
         
-        game.moves.push(new Move(to, figure, to, toFig ?? '_'));
-        game.set = setCharAt(game.set, to, figure);
+        this.game.moves.push(new Move(to, figure, to, toFig ?? noFig));
+        this.game.set = replaceCharAt(this.game.set, to, figure);
         
-        this.stor.save(game);
+        this.stor.save(this.game);
+        return Ress.ok();
     }
 
-    moveFigure(from: number, to: number): void {
+    moveFigure(from: number, to: number): Res {
         log.info(this.moveFigure.name, from, to);
 
-        const game : Game = this.stor.load() as Game;
-        if (!game) { log.warn('game is empty'); return; }
+        if (!this.game) {
+            const msg = 'game is empty';
+            log.warn(msg);
+            return Ress.nok(undefined, msg);
+        }
 
-        const frFig: string | undefined = game.set.at(from);
-        const toFig: string | undefined = game.set.at(to);
+        const frFig: string | undefined = this.game.set.at(from);
+        const toFig: string | undefined = this.game.set.at(to);
         
-        game.moves.push(new Move(from, frFig ?? '_', to, toFig ?? '_'));
+        this.game.moves.push(new Move(from, frFig ?? noFig, to, toFig ?? noFig));
         
-        game.set = setCharAt(game.set, to  , frFig ?? '_');
-        game.set = setCharAt(game.set, from, '_');
+        this.game.set = replaceCharAt(this.game.set, to  , frFig ?? noFig);
+        this.game.set = replaceCharAt(this.game.set, from, noFig);
         
-        this.stor.save(game);
+        this.stor.save(this.game);
+        return Ress.ok();
     }
 
-    undoMove(): void {
+    undoMove(): Res {
         log.info(this.undoMove.name);
 
-        const game: Game = this.stor.load() as Game;
-        if (!game) { log.warn('game is empty'); return; }
+        if (!this.game) {
+            const msg = 'game is empty';
+            log.warn(msg);
+            return Ress.nok(undefined, msg);
+        }
 
-        const move: Move | undefined = game.moves.pop();
-        if (!move) return;
+        const move: Move | undefined = this.game.moves.pop();
+        if (!move) {
+            const msg = 'no moves to undo';
+            log.warn(msg);
+            return Ress.nok(undefined, msg);
+        }
         
-        game.set = setCharAt(game.set, +move.fromPos, move.fromFig);
-        game.set = setCharAt(game.set, +move.toPos  , move.toFig);
+        this.game.set = replaceCharAt(this.game.set, +move.fromPos, move.fromFig);
+        this.game.set = replaceCharAt(this.game.set, +move.toPos  , move.toFig);
         
-        this.stor.save(game);
+        this.stor.save(this.game);
+        return Ress.ok();
     }
 }
