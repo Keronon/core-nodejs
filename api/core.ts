@@ -12,11 +12,14 @@ export type Res = {
  * @params overwrite Res fields
  */
 export const Ress = {
+    un_req(func?: string, data?: {}): Res {
+        return {code: '1-404', msg: 'unknown request', func: func ?? '_', data: data ?? '_'};
+    },
     ok(func?: string, data?: {}): Res {
         return {code: '0-0', msg: 'ok', func: func ?? '_', data: data ?? '_'};
     },
-    un_req(func?: string, data?: {}): Res {
-        return {code: '1-404', msg: 'unknown request', func: func ?? '_', data: data ?? '_'};
+    nok(func?: string, data?: {}): Res {
+        return {code: '1-500', msg: 'nok', func: func ?? '_', data: data ?? '_'};
     }
 }
 
@@ -72,7 +75,7 @@ export function getDirStructure(dir: string, prefix: string = '', struct: string
 /**
  * inserts some char to position inside of string
  */
-export function setCharAt(str: string, index: number, char: string): string {
+export function replaceCharAt(str: string, index: number, char: string): string {
     if (index < 0 || index >= str.length) {
         throw new Error("Индекс вне диапазона");
     }

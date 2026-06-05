@@ -22,13 +22,14 @@ export default async function handler(req: express.Request, res: express.Respons
     const { promise, resolve } = Promise.withResolvers<express.Response>();
 
     switch (func) {
-        case 'getFigures': board.stor.calls.push( () => resolve(res.json(board.getFigures())) );
-        break;
-        case 'getFiguresNow': return res.json(board.getFigures());
-        case 'setFigures'   : { board.setFigures( data.set               ); return res.json(Ress.ok()); };
-        case 'setFigure'    : { board.setFigure (+data.to  ,  data.figure); return res.json(Ress.ok()); };
-        case 'moveFigure'   : { board.moveFigure(+data.from, +data.to    ); return res.json(Ress.ok()); };
-        case 'undoMove'     : { board.undoMove  (                        ); return res.json(Ress.ok()); };
+        case 'getGame': board.stor.calls.push( () => resolve(res.json(board.getGame())) );
+            break;
+        case 'getFiguresNow': return res.json(board.getGame());
+        case 'setFigures'   : return res.json(board.setFigures( data.set               ));
+        case 'setFigure'    : return res.json(board.setFigure (+data.to  ,  data.figure));
+        case 'moveFigure'   : return res.json(board.moveFigure(+data.from, +data.to    ));
+        case 'undoMove'     : return res.json(board.undoMove  (                        ));
+        case 'setBoard'     : return res.json(board.setBoard  (+data.x   , +data.y     ));
         case 'check'        : return res.json(Ress.ok    (func, data));
         default             : return res.json(Ress.un_req(func, data));
     }
