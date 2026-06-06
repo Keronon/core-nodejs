@@ -2,16 +2,16 @@ import base from '../base/base.js';
 import cfg  from '../base/config.js';
 
 $(() => {
-  $('div#overlay'       ).on('click', () => base.popup.closePopup()            );
+  $('div#overlay'       ).on('click', () => base.popup.closePopup());
   $('button#new'        ).on('click', () => {
-                                              setBoard(boardSize.width, boardSize.height, 8, 8)
-                                                .done((data) => setFigures(newClassicSet));
+                                              setBoard(boardSize.width, boardSize.height, 8, 8);
+                                              setTimeout(() => setFigures(newClassicSet), 500);
                                               $('#game-input').val(newClassicSet);
                                             });
-  $('button#flip'       ).on('click', () => flipBoard()                        );
-  $('button#undo'       ).on('click', () => undoMove()                         );
-  $('button#main'       ).on('click', () => base.openLink('../index.html')     );
-  $('button#save-record').on('click', () => setFigures($('#game-input').val()) );
+  $('button#flip'       ).on('click', () => flipBoard());
+  $('button#undo'       ).on('click', () => undoMove());
+  $('button#main'       ).on('click', () => base.openLink('../index.html'));
+  $('button#save-record').on('click', () => setFigures($('#game-input').val()));
   $('button#save-size'  ).on('click', () => setBoard(boardSize.width, boardSize.height, $('#board-x').val(), $('#board-y').val()));
 
   // =====
