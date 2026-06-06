@@ -4,8 +4,8 @@ import cfg  from '../base/config.js';
 $(() => {
   $('div#overlay'       ).on('click', () => base.popup.closePopup()            );
   $('button#new'        ).on('click', () => {
-                                              setBoard(boardSize.width, boardSize.height, 8, 8);
-                                              setFigures(newClassicSet);
+                                              setBoard(boardSize.width, boardSize.height, 8, 8)
+                                                .done((data) => setFigures(newClassicSet));
                                               $('#game-input').val(newClassicSet);
                                             });
   $('button#flip'       ).on('click', () => flipBoard()                        );
@@ -17,7 +17,9 @@ $(() => {
   // =====
 
   drawPieces();
-  getGameNow();
+  getGameNow()
+    .done((data) => drawFigures(data))
+    .fail((err)  => console.error('Ошибка в getGameNow : ', err));
 
   $('#game-input').on('input', function () {
     const pos = this.selectionStart;
@@ -47,10 +49,13 @@ $(() => {
 
   // =====
   
-  const getGame = () => $.get(cfg.apiPath + 'chess?getGame')
-    .done  ((data) => drawFigures(data))
-    .fail  ((err)  => console.error('Ошибка в getGame : ', err))
-    .always(()     => setTimeout(() => getGame(), 0));
+  const getGame = () => {
+    console.log(`func : ${getGame.name}`);
+    $.get(cfg.apiPath + 'chess?getGame')
+      .done  ((data) => drawFigures(data))
+      .fail  ((err)  => console.error('Ошибка в getGame : ', err))
+      .always(()     => setTimeout(() => getGame(), 0));
+  };
   getGame();
 });
 
@@ -93,16 +98,18 @@ function getFEN(pos) {
 }
 
 function getGameNow() {
-  $.get (cfg.apiPath + 'chess?getGameNow')
-   .done((data) => drawFigures(data))
-   .fail((err)  => console.error('Ошибка в getGameNow : ', err))
+  console.log(`func : ${getGameNow.name}`);
+  return $.get(cfg.apiPath + 'chess?getGameNow');
 }
 
 function setFigures(set) {
-  $.get(cfg.apiPath + 'chess?setFigures&set=' + set);
+  console.log(`func : ${setFigures.name}`);
+  return $.get(cfg.apiPath + 'chess?setFigures&set=' + set);
 }
 
 function flipBoard() {
+  console.log(`func : ${flipBoard.name}`);
+
   map = new Array(boardSize.length);
   curSet = '';
 
@@ -111,7 +118,9 @@ function flipBoard() {
   isFlipped = !isFlipped;
   
   drawBoard();
-  getGameNow();
+  getGameNow()
+    .done((data) => drawFigures(data))
+    .fail((err)  => console.error('Ошибка в getGameNow : ', err));
 }
 
 function setBoard(width, height, xSquare, ySquare, isGot = false) {
@@ -135,7 +144,9 @@ function setBoard(width, height, xSquare, ySquare, isGot = false) {
   
   drawBoard();
 
-  if (!isGot) $.get(`${cfg.apiPath}chess?setBoard&x=${xSquare}&y=${ySquare}`);
+  if (!isGot) {
+    return $.get(`${cfg.apiPath}chess?setBoard&x=${xSquare}&y=${ySquare}`);
+  }
 }
 
 function drawPieces() {
@@ -246,7 +257,7 @@ function setFigure(to, figure) {
   if (map[to] == figure) return;
 
   drawFigure(to, figure);
-  $.get(`${cfg.apiPath}chess?setFigure&to=${to}&figure=${figure}`);
+  return $.get(`${cfg.apiPath}chess?setFigure&to=${to}&figure=${figure}`);
 }
 
 function moveFigure(from, to) {
@@ -259,7 +270,7 @@ function moveFigure(from, to) {
 
   drawFigure(to, map[from]);
   drawFigure(from, '_');
-  $.get(`${cfg.apiPath}chess?moveFigure&from=${from}&to=${to}`);
+  return $.get(`${cfg.apiPath}chess?moveFigure&from=${from}&to=${to}`);
 }
 
 function undoMove() {
@@ -267,5 +278,5 @@ function undoMove() {
 
   if ($('#move-record').is(':empty')) return;
 
-  $.get(cfg.apiPath + 'chess?undoMove');
+  return $.get(cfg.apiPath + 'chess?undoMove');
 }
