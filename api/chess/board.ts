@@ -63,7 +63,7 @@ class Game {
     static getDefault(): Game {
         return {
             field: { x: 8, y: 8 },
-            set  : '',
+            set  : noFig.repeat(64),
             moves: []
         }
     }
@@ -83,7 +83,7 @@ export class Board {
         log.info(this.setBoard.name, x, y);
         this.game.field.x = x;
         this.game.field.y = y;
-        this.game.set = '';
+        this.game.set = noFig.repeat(x * y);
         this.game.moves = [];
         this.stor.save(this.game);
         return Ress.ok();
