@@ -4,8 +4,8 @@ import cfg  from '../base/config.js';
 $(() => {
   $('div#overlay'       ).on('click', () => base.popup.closePopup()            );
   $('button#new'        ).on('click', () => {
-                                              setFigures(newClassicSet);
                                               setBoard(boardSize.width, boardSize.height, 8, 8);
+                                              setFigures(newClassicSet);
                                               $('#game-input').val(newClassicSet);
                                             });
   $('button#flip'       ).on('click', () => flipBoard()                        );
