@@ -50,7 +50,7 @@ $(() => {
   const getGame = () => $.get(cfg.apiPath + 'chess?getGame')
     .done  ((data) => drawFigures(data))
     .fail  ((err)  => console.error('Ошибка в getGame : ', err))
-    .always(()     => setTimeout(() => getSet(), 0));
+    .always(()     => setTimeout(() => getGame(), 0));
   getGame();
 });
 
@@ -201,9 +201,7 @@ function _drawFigures(data, setsNum = 0) {
     return;
   }
 
-  if (data.field.x != boardSize.xSquare || data.field.y != boardSize.ySquare) {
-    setBoard(boardSize.width, boardSize.height, data.field.x, data.field.y, true);
-  }
+  setBoard(boardSize.width, boardSize.height, data.field.x, data.field.y, true);
 
   $('#game-input').val(data.set);
   curSet = data.set;
