@@ -59,6 +59,14 @@ class Game {
     static is(obj: any): boolean {
         return ('set' in obj) && ('moves' in obj);
     }
+
+    static getDefault(): Game {
+        return {
+            field: { x: 8, y: 8 },
+            set  : '',
+            moves: []
+        }
+    }
 }
 
 export class Board {
@@ -67,7 +75,8 @@ export class Board {
 
     constructor(stor: _Storage) {
         this.stor = stor;
-        this.game = this.stor.load() as Game;
+        this.game = {...Game.getDefault(), ...this.stor.load()};
+        this.stor.save(this.game);
     }
 
     setBoard(x: number, y: number): Res {
