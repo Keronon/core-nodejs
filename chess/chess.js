@@ -85,6 +85,7 @@ let boardSize = {
 };
 let map         = [];
 let curSet      = '';
+let curMoves    = [];
 let setsCounter = 0;
 
 let isFlipped      = false;
@@ -143,6 +144,7 @@ function flipMarkDirX() {
   $('#board-mark-x').css('flex-direction', isFlipped ^ !isFlippedMarkX ? 'row-reverse' : 'row');
   
   isFlippedMarkX = !isFlippedMarkX;
+  drawRecords();
 }
 function flipMarkDirY() {
   console.log(`func : ${flipMarkDirY.name}`);
@@ -152,6 +154,7 @@ function flipMarkDirY() {
   $('#board-mark-y').css('flex-direction', isFlipped ^ !isFlippedMarkY ? 'column-reverse' : 'column');
 
   isFlippedMarkY = !isFlippedMarkY;
+  drawRecords();
 }
 
 function setBoard(xSquare, ySquare, isGot = false) {
@@ -289,15 +292,16 @@ function _drawFigures(data, setsNum = 0) {
     drawFigure(coord, data.set.charAt(coord));
   }
 
-  drawRecords(data.moves);
+  curMoves = data.moves;
+  drawRecords();
 }
 
-function drawRecords(dataMoves) {
+function drawRecords() {
   $('#move-record').empty();
-  if (!dataMoves[0]) return;
+  if (!curMoves[0]) return;
 
-  for (let moveNum in dataMoves) {
-    const move = dataMoves[moveNum];
+  for (let moveNum in curMoves) {
+    const move = curMoves[moveNum];
     recordMove(
       `${+moveNum + 1} : ${
         move.fromFig == '_' ? '&#12276;' : pieceSet[move.fromFig]
