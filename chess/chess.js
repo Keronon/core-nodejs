@@ -161,6 +161,7 @@ function setBoard(xSquare, ySquare, isGot = false) {
   boardSize.y = ySquare;
   map = new Array(boardSize.length);
   curSet = '';
+  $('#game-input').val(curSet).trigger('input');
 
   const rootStyle = document.documentElement.style;
   rootStyle.setProperty('--board-xSquare', xSquare);

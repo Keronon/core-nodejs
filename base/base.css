@@ -13,6 +13,10 @@ div {
   scrollbar-width: thin;
 }
 
+input, textarea, p {
+  align-content: center;
+}
+
 input.in {
   width: 0;
 }
@@ -20,7 +24,6 @@ input.in {
 p {
   margin: 0;
   display: block;
-  align-content: center;
 }
 .in {
   display: inline-block;
