@@ -13,26 +13,30 @@
 <body>
     <div id="overlay"> <div id="popup"></div> </div>
     <div id="body">
-        <div id="menu" class="flex-row">
-            <div id="board-size" class="flex-row flex-11 border">
-                <p class="in flex-size" style="--val: 25%;">Board size:</p>
-                <input type="number" step="1" id="board-x" class="flex-size c" style="--val: 20%;"/>
-                <p class="in c flex-size" style="--val: 5%;">X</p>
-                <input type="number" step="1" id="board-y" class="flex-size c" style="--val: 20%;"/>
-                <button id="save-size" class="btn flex-size" style="--val: 5%;">🖫</button>
+        <div id="menu" class="flex-col">
+            <div id="board-size" class="flex-col border">
+                <p class="c">Board size:</p>
+                <input type="number" step="1" id="board-x" class="c"/>
+                <p class="c">X</p>
+                <input type="number" step="1" id="board-y" class="c"/>
+                <button id="save-size" class="btn">🖫</button>
             </div>
-            <button id="new"  class="btn flex-12">NEW GAME  </button>
-            <button id="flip" class="btn flex-12">FLIP BOARD</button>
-            <button id="undo" class="btn flex-12">UNDO MOVE </button>
-            <button id="main" class="btn flex-12">MAIN MENU </button>
+            <div id="mark-dir" class="flex-row border">
+                <button id="mark-dir-x" class="btn flex-12">↦ A-H</button>
+                <button id="mark-dir-y" class="btn flex-12">↧ 8-1</button>
+            </div>
+            <button id="new"  class="btn">NEW GAME  </button>
+            <button id="flip" class="btn">FLIP BOARD</button>
+            <button id="undo" class="btn">UNDO MOVE </button>
+            <button id="main" class="btn">MAIN MENU </button>
         </div>
-        <div id="pieces" class="flex-col border"></div>
+        <div id="pieces" class="flex-row border"></div>
         <div id="board"></div>
-        <div id="board-mark-cols" class="flex-row">
+        <div id="board-mark-x" class="flex-row">
             <p class="mark">a</p><p class="mark">b</p><p class="mark">c</p><p class="mark">d</p>
             <p class="mark">e</p><p class="mark">f</p><p class="mark">g</p><p class="mark">h</p>
         </div>
-        <div id="board-mark-rows" class="flex-col">
+        <div id="board-mark-y" class="flex-col">
             <p class="mark">8</p><p class="mark">7</p><p class="mark">6</p><p class="mark">5</p>
             <p class="mark">4</p><p class="mark">3</p><p class="mark">2</p><p class="mark">1</p>
         </div>

@@ -13,7 +13,7 @@ div {
   scrollbar-width: thin;
 }
 
-input {
+input.in {
   width: 0;
 }
 

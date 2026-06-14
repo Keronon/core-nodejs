@@ -1,10 +1,12 @@
 @import "../base/base.css";
 
 :root {
-    --board-width  : 520px;
-    --board-height : var(--board-width);
     --board-xSquare: 8;
     --board-ySquare: var(--board-xSquare);
+
+    --board-width  : 520px;
+    --board-height : calc(var(--board-width) / var(--board-xSquare) * var(--board-ySquare)); /*var(--board-width);*/
+
     --square-width : calc(var(--board-width) / var(--board-xSquare));
     
     background-color: rgba(0, 0, 0, 0.2);
@@ -21,27 +23,30 @@
 }
 
 #menu {
-    position    : absolute;
-    top         : anchor(--board bottom);
-    left        : anchor(--board left);
-    width       : calc(var(--board-width) + 20px);
-    margin-top  : 2em;
+    position: absolute;
+    top     : anchor(--board top );
+    right   : anchor(--board left);
+    
+    height      : calc(var(--board-height) + 30px + 1.15em);
+    width       : 12em;
+    margin-right: 1.5em;
 }
 
 #pieces {
-    position : absolute;
-    top      : anchor(--board top );
-    right    : anchor(--board left);
+    position: absolute;
+    top     : anchor(--board bottom);
+    left    : anchor(--board left);
     
-    width          : auto;
-    height         : calc(var(--board-height) + 30px + 1.15em);
-    margin-right   : 1.5em;
+    width     : calc(var(--board-width) + 20px);
+    margin-top: 2em;
+    
     justify-content: start;
+    overflow       : auto;
     
     background-color: white;
 }
 
-#board-mark-cols {
+#board-mark-x {
     position: absolute;
     top     : anchor(--board bottom);
     left    : anchor(--board left);
@@ -50,11 +55,11 @@
     justify-content: space-around;
     
     background-color: brown;
-    color: white;
-    border-radius: 0 0 10px 10px;
+    color           : white;
+    border-radius   : 0 0 10px 10px;
 }
 
-#board-mark-rows {
+#board-mark-y {
     position: absolute;
     top     : anchor(--board top);
     left    : anchor(--board right);
@@ -65,7 +70,7 @@
     
     background-color: brown;
     color           : white;
-    border-radius: 0 10px 10px 0;
+    border-radius   : 0 10px 10px 0;
 }
 
 #board-size {
@@ -102,16 +107,27 @@
 }
 
 #game-input {
-    font: 10.5pt monospace;
-    flex-grow: 1;
+    font            : 10.5pt monospace;
+    flex-grow       : 1;
     background-color: #0000;
-    border: none;
+    border          : none;
+}
+
+#board-size > p {
+    padding-right: 0.65em;
+}
+#board-size > input {
+    margin: 0 0.5em;
+}
+
+#mark-dir {
+    height: 2.5em;
 }
 
 .border {
-    border         : 10px solid brown;
-    border-radius  : 10px;
-    box-sizing     : border-box;
+    border       : 10px solid brown;
+    border-radius: 10px;
+    box-sizing   : border-box;
 }
 
 .mark, .move, .piece {
@@ -120,7 +136,6 @@
 
 .piece {
     font-size: 24pt;
-    height: 1em;
 }
 
 .square {
@@ -140,5 +155,5 @@
 
 .figure {
     font-size: 48px;
-    cursor: pointer;
+    cursor   : pointer;
 }

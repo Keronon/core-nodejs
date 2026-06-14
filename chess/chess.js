@@ -13,9 +13,12 @@ $(() => {
   $('button#main'       ).on('click', () => base.openLink('../index.html'));
   $('button#save-record').on('click', () => setFigures($('#game-input').val()));
   $('button#save-size'  ).on('click', () => setBoard(boardSize.width, boardSize.height, $('#board-x').val(), $('#board-y').val()));
+  $('button#mark-dir-x' ).on('click', () => flipMarkDirX());
+  $('button#mark-dir-y' ).on('click', () => flipMarkDirY());
 
   // =====
 
+  drawMarks();
   drawPieces();
   getGameNow()
     .done((data) => drawFigures(data))
@@ -63,13 +66,14 @@ const divMove   = (move         ) => `<p class="move">${move}</p>`;
 const divSquare = (coord, color ) => `<div id="s${coord}" class="square ${color}"></div>`;
 const divFigure = (coord, figure) => `<div id="f${coord}" class="figure">${figure}</div>`;
 const divPiece  = (piece, figure) => `<div id="${piece}"  class="piece" >${figure}</div>`;
+const divMark   = (mark         ) => `<p class="mark">${mark}</p>`;
 
 const pieceSet = {
-  // &#12276; empty square
-  // &#9932;  X
+  // [↦] &#8614;
+  // [↧] &#8615;
+  _: '', // in piece set : [X] -> &#9932; in records [empty square] -> &#12276;
   K: '&#9812;', Q: '&#9813;', R: '&#9814;', B: '&#9815;', N: '&#9816;', P: '&#9817;',
-  k: '&#9818;', q: '&#9819;', r: '&#9820;', b: '&#9821;', n: '&#9822;', p: '&#9823;',
-  _: ''
+  k: '&#9818;', q: '&#9819;', r: '&#9820;', b: '&#9821;', n: '&#9822;', p: '&#9823;'
 };
 
 const newClassicSet = 'rnbqkbnrpppppppp________________________________PPPPPPPPRNBQKBNR';
@@ -86,8 +90,10 @@ let map         = [];
 let curSet      = '';
 let setsCounter = 0;
 
-let isFlipped = false;
-let isActive  = false;
+let isFlipped      = false;
+let isActive       = false;
+let isFlippedMarkX = false;
+let isFlippedMarkY = false;
 
 function isBlack(coord) {
   return (coord % boardSize.xSquare + Math.floor(coord / boardSize.xSquare)) % 2 ;
@@ -113,14 +119,27 @@ function flipBoard() {
   map = new Array(boardSize.length);
   curSet = '';
 
-  $('#board-mark-cols').css('flex-direction', isFlipped ? 'row-reverse'    : 'row'   );
-  $('#board-mark-rows').css('flex-direction', isFlipped ? 'column-reverse' : 'column');
+  $('#board-mark-x').css('flex-direction', isFlipped ^ !isFlippedMarkX ? 'row-reverse'    : 'row'   );
+  $('#board-mark-y').css('flex-direction', isFlipped ^ !isFlippedMarkY ? 'column-reverse' : 'column');
   isFlipped = !isFlipped;
   
   drawBoard();
   getGameNow()
     .done((data) => drawFigures(data))
     .fail((err)  => console.error('Ошибка в getGameNow : ', err));
+}
+
+function flipMarkDirX() {
+  console.log(`func : ${flipMarkDirX.name}`);
+
+  $('#board-mark-x').css('flex-direction', isFlipped ^ !isFlippedMarkX ? 'row-reverse' : 'row');
+  isFlippedMarkX = !isFlippedMarkX;
+}
+function flipMarkDirY() {
+  console.log(`func : ${flipMarkDirY.name}`);
+
+  $('#board-mark-y').css('flex-direction', isFlipped ^ !isFlippedMarkY ? 'column-reverse' : 'column');
+  isFlippedMarkY = !isFlippedMarkY;
 }
 
 function setBoard(width, height, xSquare, ySquare, isGot = false) {
@@ -157,7 +176,10 @@ function drawPieces() {
     $('#pieces').append(divPiece(piece, piece == '_' ? '&#9932;' : pieceSet[piece]));
     $('#'+piece).draggable({
       start: (event, ui) => { isActive = true; },
-      containment: '#board'
+      containment: '#board',
+      helper: "clone",
+      appendTo: "body",
+      scroll: false
     });
   }
 }
@@ -170,6 +192,24 @@ function drawBoard() {
     const posCoord = isFlipped ? boardSize.length - 1 - coord : coord;
     $('#board').append(divSquare(posCoord, isBlack(coord) ? 'black' : 'white'));
     $('#s'+posCoord).droppable({ drop: dropFigure });
+  }
+
+  drawMarks();
+}
+
+function drawMarks() {
+  $('#board-mark-x').html('');
+  let char = 'a'.codePointAt(0);
+  for (let coord = 0; coord < boardSize.xSquare; coord++) {
+    $('#board-mark-x').append(divMark(String.fromCodePoint(char)));
+    char += 1;
+  }
+
+  $('#board-mark-y').html('');
+  char = 1;
+  for (let coord = 0; coord < boardSize.ySquare; coord++) {
+    $('#board-mark-y').append(divMark(char));
+    char += 1;
   }
 }
 
