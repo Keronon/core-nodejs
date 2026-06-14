@@ -4,7 +4,7 @@ import cfg  from '../base/config.js';
 $(() => {
   $('div#overlay'       ).on('click', () => base.popup.closePopup());
   $('button#new'        ).on('click', () => {
-                                              setBoard(boardSize.width, boardSize.height, 8, 8);
+                                              setBoard(8, 8);
                                               setTimeout(() => setFigures(newClassicSet), 500);
                                               $('#game-input').val(newClassicSet);
                                             });
@@ -12,13 +12,13 @@ $(() => {
   $('button#undo'       ).on('click', () => undoMove());
   $('button#main'       ).on('click', () => base.openLink('../index.html'));
   $('button#save-record').on('click', () => setFigures($('#game-input').val()));
-  $('button#save-size'  ).on('click', () => setBoard(boardSize.width, boardSize.height, $('#board-x').val(), $('#board-y').val()));
+  $('button#save-size'  ).on('click', () => setBoard($('#board-x').val(), $('#board-y').val()));
   $('button#mark-dir-x' ).on('click', () => flipMarkDirX());
   $('button#mark-dir-y' ).on('click', () => flipMarkDirY());
 
   // =====
 
-  drawMarks();
+  flipMarkDirY();
   drawPieces();
   getGameNow()
     .done((data) => drawFigures(data))
@@ -79,12 +79,9 @@ const pieceSet = {
 const newClassicSet = 'rnbqkbnrpppppppp________________________________PPPPPPPPRNBQKBNR';
 
 let boardSize = {
-  width  : 520,
-  height : 520,
-  xSquare: 8,
-  ySquare: 8,
-  get size()   { return this.width   * this.height;  },
-  get length() { return this.xSquare * this.ySquare; }
+  x: 8,
+  y: 8,
+  get length() { return this.x * this.y; }
 };
 let map         = [];
 let curSet      = '';
@@ -96,11 +93,15 @@ let isFlippedMarkX = false;
 let isFlippedMarkY = false;
 
 function isBlack(coord) {
-  return (coord % boardSize.xSquare + Math.floor(coord / boardSize.xSquare)) % 2 ;
+  return (coord % boardSize.x + Math.floor(coord / boardSize.x)) % 2 ;
 }
 
 function getFEN(pos) {
-  return String.fromCharCode(pos % boardSize.xSquare + 97) + String.fromCharCode(boardSize.xSquare - 1 - Math.floor(pos / boardSize.xSquare) + 49);
+  const xOffset = pos % boardSize.x;
+  const x = isFlippedMarkX ? boardSize.x + 96 - xOffset : xOffset + 97;
+  const yOffset = Math.floor(pos / boardSize.x);
+  const y = isFlippedMarkY ? boardSize.y - yOffset : yOffset + 1;
+  return String.fromCharCode(x) + y;
 }
 
 function getGameNow() {
@@ -119,6 +120,11 @@ function flipBoard() {
   map = new Array(boardSize.length);
   curSet = '';
 
+  const xText = $('#mark-dir-x').html().split(' ↦ ');
+  $('#mark-dir-x').html(xText[1] + ' ↦ ' + xText[0]);
+  const yText = $('#mark-dir-y').html().split(' ↧ ');
+  $('#mark-dir-y').html(yText[1] + ' ↧ ' + yText[0]);
+
   $('#board-mark-x').css('flex-direction', isFlipped ^ !isFlippedMarkX ? 'row-reverse'    : 'row'   );
   $('#board-mark-y').css('flex-direction', isFlipped ^ !isFlippedMarkY ? 'column-reverse' : 'column');
   isFlipped = !isFlipped;
@@ -132,29 +138,31 @@ function flipBoard() {
 function flipMarkDirX() {
   console.log(`func : ${flipMarkDirX.name}`);
 
+  const xText = $('#mark-dir-x').html().split(' ↦ ');
+  $('#mark-dir-x').html(xText[1] + ' ↦ ' + xText[0]);
   $('#board-mark-x').css('flex-direction', isFlipped ^ !isFlippedMarkX ? 'row-reverse' : 'row');
+  
   isFlippedMarkX = !isFlippedMarkX;
 }
 function flipMarkDirY() {
   console.log(`func : ${flipMarkDirY.name}`);
 
+  const yText = $('#mark-dir-y').html().split(' ↧ ');
+  $('#mark-dir-y').html(yText[1] + ' ↧ ' + yText[0]);
   $('#board-mark-y').css('flex-direction', isFlipped ^ !isFlippedMarkY ? 'column-reverse' : 'column');
+
   isFlippedMarkY = !isFlippedMarkY;
 }
 
-function setBoard(width, height, xSquare, ySquare, isGot = false) {
+function setBoard(xSquare, ySquare, isGot = false) {
   console.log(`func : ${setBoard.name}`);
 
-  boardSize.width   = width;
-  boardSize.height  = height;
-  boardSize.xSquare = xSquare;
-  boardSize.ySquare = ySquare;
+  boardSize.x = xSquare;
+  boardSize.y = ySquare;
   map = new Array(boardSize.length);
   curSet = '';
 
   const rootStyle = document.documentElement.style;
-  rootStyle.setProperty('--board-width'  , width  + 'px');
-  rootStyle.setProperty('--board-height' , height + 'px');
   rootStyle.setProperty('--board-xSquare', xSquare);
   rootStyle.setProperty('--board-ySquare', ySquare);
 
@@ -175,10 +183,16 @@ function drawPieces() {
   for (let piece in pieceSet) {
     $('#pieces').append(divPiece(piece, piece == '_' ? '&#9932;' : pieceSet[piece]));
     $('#'+piece).draggable({
-      start: (event, ui) => { isActive = true; },
+      start: (event, ui) => {
+        isActive = true;
+        $(event.target).css("opacity", 0);
+      },
+      stop: (event, ui) => {
+        $(event.target).css("opacity", '');
+      },
       containment: '#board',
-      helper: "clone",
-      appendTo: "body",
+      helper: 'clone',
+      appendTo: 'body',
       scroll: false
     });
   }
@@ -197,22 +211,6 @@ function drawBoard() {
   drawMarks();
 }
 
-function drawMarks() {
-  $('#board-mark-x').html('');
-  let char = 'a'.codePointAt(0);
-  for (let coord = 0; coord < boardSize.xSquare; coord++) {
-    $('#board-mark-x').append(divMark(String.fromCodePoint(char)));
-    char += 1;
-  }
-
-  $('#board-mark-y').html('');
-  char = 1;
-  for (let coord = 0; coord < boardSize.ySquare; coord++) {
-    $('#board-mark-y').append(divMark(char));
-    char += 1;
-  }
-}
-
 function dropFigure (event, ui) {
   const id = ui.draggable.attr('id');
   if (id[0] == 'f') {
@@ -222,9 +220,38 @@ function dropFigure (event, ui) {
     );
   } else {
     setFigure(this.id.substring(1), id);
-    ui.draggable.attr('style', 'position: relative;');
   }
   isActive = false;
+}
+
+function drawMarks() {
+  $('#board-mark-x').html('');
+  let charPoint = 'a'.codePointAt(0);
+  let maxChar = 'a';
+  for (let coord = 0; coord < boardSize.x; coord++) {
+    const char = String.fromCodePoint(charPoint);
+    $('#board-mark-x').append(divMark(char));
+    maxChar = char;
+    charPoint += 1;
+  }
+  
+  const xText = $('#mark-dir-x').html().split(' ↦ ');
+  isFlipped ^ !isFlippedMarkX
+    ? $('#mark-dir-x').html(xText[0] + ' ↦ ' + maxChar)
+    : $('#mark-dir-x').html(maxChar  + ' ↦ ' + xText[1])
+
+  $('#board-mark-y').html('');
+  charPoint = 1;
+  for (let coord = 0; coord < boardSize.y; coord++) {
+    $('#board-mark-y').append(divMark(charPoint));
+    maxChar = charPoint;
+    charPoint += 1;
+  }
+  
+  const yText = $('#mark-dir-y').html().split(' ↧ ');
+  isFlipped ^ !isFlippedMarkY
+    ? $('#mark-dir-y').html(yText[0] + ' ↧ ' + maxChar)
+    : $('#mark-dir-y').html(maxChar  + ' ↧ ' + yText[1])
 }
 
 function drawFigures(data) {
@@ -252,7 +279,7 @@ function _drawFigures(data, setsNum = 0) {
     return;
   }
 
-  setBoard(boardSize.width, boardSize.height, data.field.x, data.field.y, true);
+  setBoard(data.field.x, data.field.y, true);
 
   $('#game-input').val(data.set);
   curSet = data.set;
@@ -261,10 +288,15 @@ function _drawFigures(data, setsNum = 0) {
     drawFigure(coord, data.set.charAt(coord));
   }
 
+  drawRecords(data.moves);
+}
+
+function drawRecords() {
   $('#move-record').empty();
-  if (!data.moves[0]) return;
-  for (let moveNum in data.moves) {
-    const move = data.moves[moveNum];
+  if (!dataMoves[0]) return;
+
+  for (let moveNum in dataMoves) {
+    const move = dataMoves[moveNum];
     recordMove(
       `${+moveNum + 1} : ${
         move.fromFig == '_' ? '&#12276;' : pieceSet[move.fromFig]

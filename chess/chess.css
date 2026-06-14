@@ -4,7 +4,7 @@
     --board-xSquare: 8;
     --board-ySquare: var(--board-xSquare);
 
-    --board-width  : 520px;
+    --board-width  : 28vw;
     --board-height : calc(var(--board-width) / var(--board-xSquare) * var(--board-ySquare)); /*var(--board-width);*/
 
     --square-width : calc(var(--board-width) / var(--board-xSquare));
@@ -37,8 +37,9 @@
     top     : anchor(--board bottom);
     left    : anchor(--board left);
     
-    width     : calc(var(--board-width) + 20px);
-    margin-top: 2em;
+    max-height: 6.5em;
+    width     : calc(var(--board-width) + 30px + 1.15em);
+    margin-top: 3em;
     
     justify-content: start;
     overflow       : auto;
@@ -46,10 +47,15 @@
     background-color: white;
 }
 
+#board-mark-x, #board-mark-y {
+    gap: 0;
+}
+
 #board-mark-x {
     position: absolute;
     top     : anchor(--board bottom);
     left    : anchor(--board left);
+    height  : 1.15em;
     width   : var(--board-width);
     padding : 0 10px 10px 10px;
     justify-content: space-around;
@@ -132,6 +138,11 @@
 
 .mark, .move, .piece {
     margin: 0;
+}
+
+.mark {
+    max-height: var(--square-width);
+    text-align: center;
 }
 
 .piece {
