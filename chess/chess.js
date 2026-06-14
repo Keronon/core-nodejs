@@ -292,7 +292,7 @@ function _drawFigures(data, setsNum = 0) {
   drawRecords(data.moves);
 }
 
-function drawRecords() {
+function drawRecords(dataMoves) {
   $('#move-record').empty();
   if (!dataMoves[0]) return;
 

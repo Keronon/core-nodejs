@@ -120,11 +120,13 @@
     overflow-x : auto;
 }
 
-#board-size > p {
-    padding-right: 0.65em;
-}
 #board-size > input {
-    margin: 0 0.5em;
+    margin      : 0 0.5em;
+    font-weight : bold;
+    padding-left: 1.2em;
+}
+#board-size > button {
+    margin-top : 0.5em;
     font-weight: bold;
 }
 
